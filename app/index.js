@@ -149,8 +149,10 @@ KleiGenerator.prototype.basicFiles = function basicFiles() {
 };
 
 KleiGenerator.prototype.backendFiles = function backendFiles() {
-  if (this.express) {
+  if (this.express || this.mongo) {
     this.template('_index.js', 'index.js');
+  }
+  if (this.express) {
 
     if (this.useexample) {
       this.mkdir('api');
@@ -163,6 +165,9 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
         this.copy('api/todo-nomongo/todo.controller.js', 'api/todo/todo.controller.js');
       }
     }
+  } else if (this.mongo) {
+    this.mkdir('models');
+    this.copy('models/Todo.js', 'models/Todo.js');
   } else if (!this.choseType) {
     this.mkdir('src');
   }

@@ -10,7 +10,8 @@
     "klei-module"
   ],
   "dependencies": {
-    <% if (mongo) { %>"mongoose": "~3.8.0"<% } %><% if (mongo && express) { %>,
+    <% if (mongo) { %>"mongoose": "~3.8.0",
+    "mongoload": "~0.1.0"<% } %><% if (mongo && express) { %>,
     <% } %><% if (express) { %>"express": "~3.4.4",
     "exctrl": ">=0.2"<% } %>
   },
