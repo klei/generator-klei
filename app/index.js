@@ -3,9 +3,9 @@ var util = require('util'),
     path = require('path'),
     yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
-    $g = chalk.green,
-    $y = chalk.yellow,
-    $d = chalk.grey;
+    $ok = chalk.green,
+    $info = chalk.yellow,
+    $comment = chalk.grey;
 
 
 var KleiGenerator = module.exports = function KleiGenerator(args, options, config) {
@@ -21,46 +21,13 @@ var KleiGenerator = module.exports = function KleiGenerator(args, options, confi
 
   this.pkg = require('../package.json');
 
-              // ' █ ▄▀ █ ▄▀▀▀▄ ▀ \n' +
-              // ' █▀▄  █ █▀▀▀▀ █ \n' +
-              // ' ▀  ▀ ▀  ▀▀▀  ▀ \n';
   this.klei = '\n' +
-             // ' $$\\       $$\\           $$\\ \n' +
-             // ' $$ |      $$ |          \\__|\n' +
-             // ' $$ |  $$\\ $$ | $$$$$$\\  $$\\ \n' +
-             // ' $$ | $$  |$$ |$$  __$$\\ $$ |\n' +
-             // ' $$$$$$  / $$ |$$$$$$$$ |$$ |\n' +
-             // ' $$  _$$<  $$ |$$   ____|$$ |\n' +
-             // ' $$ | \\$$\\ $$ |\\$$$$$$$\\ $$ |\n' +
-             // ' \\__|  \\__|\\__| \\_______|\\__|\n';
-
-             // '  _    _      _ \n' +
-             // ' | | _| | ___(_)\n' +
-             // ' | |/ / |/ _ \\ |\n' +
-             // ' |   <| |  __/ |\n' +
-             // ' |_|\\_\\_|\\___|_|\n';
-
-
-            // '  _   _     _ \n' +
-            // ' | |_| |___|_|\n' +
-            // ' | \'_| | -_| |\n' +
-            // ' |_,_|_|___|_|\n';
-
-            // ' 888      888          d8b \n' +
-            // ' 888      888          Y8P \n' +
-            // ' 888      888              \n' +
-            // ' 888  888 888  .d88b.  888 \n' +
-            // ' 888 .88P 888 d8P  Y8b 888 \n' +
-            // ' 888888K  888 88888888 888 \n' +
-            // ' 888 "88b 888 Y8b.     888 \n' +
-            // ' 888  888 888  "Y8888  888 \n';
-
-            $g('  _    _      ') + $y('_') + ' \n' +
-            $g(' | |  | |    ') + $y('(_)\n') +
-            $g(' | | _| | ___ _ \n') +
-            $g(' | |/ / |/ _ \\ |\n') +
-            $g(' |   <| |  __/ |\n') +
-            $g(' |_|\\_\\_|\\___|_|') + $d(' v.' + this.pkg.version) + '\n';
+            $ok('  _    _      ') + $info('_') + ' \n' +
+            $ok(' | |  | |    ') + $info('(_)\n') +
+            $ok(' | | _| | ___ _ \n') +
+            $ok(' | |/ / |/ _ \\ |\n') +
+            $ok(' |   <| |  __/ |\n') +
+            $ok(' |_|\\_\\_|\\___|_|') + $comment(' v.' + this.pkg.version) + '\n';
 
 };
 
@@ -92,26 +59,26 @@ KleiGenerator.prototype.askForModuleType = function askForModuleType() {
   var prompts = [{
     type: 'checkbox',
     name: 'types',
-    message: 'What pieces do you want to build your module with? (uncheck all for a pure Node.js module)',
+    message: 'What pieces do you want to build your module with? ' + $comment('(uncheck all for a pure Node.js module)'),
     choices: [
       {
-        value: 'angular',
-        name: 'AngularJS',
+        value: 'express',
+        name: 'REST API ' + $comment('(using ' + $info('express.js') + ')'),
         checked: true
       },
       {
         value: 'mongo',
-        name: 'MongoDB (using Mongoose)',
+        name: 'MongoDB ' + $comment('(using ' + $info('Mongoose') + ')'),
         checked: true
       },
       {
-        value: 'express',
-        name: 'Express.js',
+        value: 'angular',
+        name: 'Client APP ' + $comment('(using ' + $info('AngularJS') + ')'),
         checked: true
       },
       {
         value: 'stylus',
-        name: 'Stylus (CSS)',
+        name: 'Stylesheets ' + $comment('(using ' + $info('Stylus') + ')'),
         checked: true
       }
     ]
@@ -130,17 +97,16 @@ KleiGenerator.prototype.askForModuleType = function askForModuleType() {
 };
 
 KleiGenerator.prototype.askForConfig = function askForConfig() {
-  if (this.choseType) {
-    this.addconfig = true;
-    return;
-  }
   var cb = this.async();
 
   var prompts = [{
     type: 'confirm',
     name: 'addconfig',
-    message: 'Should a config dir be added to your module as well?',
-    default: true
+    message: 'Should a config dir be added to your module as well? ' + $comment('(for environment specific settings and such)'),
+    default: true,
+    when: function () {
+      return !this.choseType;
+    }
   }];
 
   this.prompt(prompts, function (props) {
@@ -151,17 +117,16 @@ KleiGenerator.prototype.askForConfig = function askForConfig() {
 };
 
 KleiGenerator.prototype.askForExample = function askForExample() {
-  if (!this.angular && !this.express) {
-    return;
-  }
-
   var cb = this.async();
 
   var prompts = [{
     type: 'confirm',
     name: 'useexample',
     message: 'Should a simple Todo list example be generated as well?',
-    default: true
+    default: this.angular || this.express,
+    when: function () {
+      return this.angular || this.express;
+    }
   }];
 
   this.prompt(prompts, function (props) {
