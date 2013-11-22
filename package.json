@@ -1,0 +1,48 @@
+{
+  "name": "generator-klei",
+  "version": "0.1.0",
+  "description": "A Yeoman generator for generating awesome module or app boilerplates! MEAN-stack (all parts optional) with Grunt and Bower sweetness..",
+  "keywords": [
+    "yeoman-generator",
+    "klei",
+    "grunt",
+    "angularjs",
+    "express",
+    "mongo",
+    "stylus"
+  ],
+  "homepage": "https://github.com/klei-dev/generator-klei",
+  "bugs": "https://github.com/klei-dev/generator-klei/issues",
+  "author": {
+    "name": "Joakim Bengtson",
+    "email": "joakim@klei.se",
+    "url": "http://joakim.beng.se"
+  },
+  "main": "app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/klei-dev/generator-klei.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "yeoman-generator": "~0.13.0",
+    "chalk": "~0.3.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.12.0"
+  },
+  "peerDependencies": {
+    "yo": ">=1.0.0-rc.1"
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "npm": ">=1.2.10"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ]
+}
