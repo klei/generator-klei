@@ -1,0 +1,2 @@
+node_modules/<% if (angular || stylus) { %>
+bower_components/<% } %>

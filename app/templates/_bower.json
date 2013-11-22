@@ -1,0 +1,26 @@
+{
+  "name": "km-<%= modulenameDashed %>",
+  "main": [
+    <% if (angular) { %>"/dist/km-<%= modulenameDashed %>.js"<% } %><% if (angular && stylus) { %>,
+    <% } %><% if (stylus) { %>"/dist/km-<%= modulenameDashed %>.css"<% } %>
+  ],
+  "version": "0.1.0",
+  "description": "TODO",
+  "authors": [
+    "TODO"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    <% if (angular) { %>"angular": "1.2.0",
+    "angular-route": "1.2.0"<% } %>
+  },
+  "devDependencies": {
+    <% if (angular) { %>"angular-mocks": "1.2.0"<% } %>
+  }
+}

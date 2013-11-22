@@ -1,0 +1,402 @@
+
+module.exports = function (grunt) {
+  // Loading all tasks:
+  require('load-grunt-tasks')(grunt);
+
+  var pkg = require('./package'),
+      modulename = (pkg.klei || {}).name || pkg.title || pkg.name;
+
+  grunt.initConfig({
+    pkg: pkg,
+    modulename: modulename,
+
+    /**
+     * Source dirs
+     */
+    dirs: {
+      <% if (!choseType) { %>src: 'src'<% } %>
+      <% if (angular) { %>app: 'app'<% } %><% if (express) { %>,
+      api: 'api'<% } %><% if (stylus) { %>,
+      styles: 'styles'<% } %><% if (angular || stylus) { %>,
+      dist: 'dist',
+      temp: '.tmp'<% } %><% if (addconfig) { %>,
+      config: 'config'<% } %>
+    },
+
+    <% if (angular || stylus) { %>
+    /**
+     * Banner for top of concatenated CSS and Javascript
+     */
+    meta: {
+      banner: '/**\n' +
+        ' * <%%= modulename %> - v<%%= pkg.version %> - <%%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' *\n' +
+        ' * Copyright (c) <%%= grunt.template.today("yyyy") %> <%%= pkg.author %>\n' +
+        ' */\n'
+    },
+
+    /**
+     * Clean up
+     */
+    clean: {
+      dist: {
+        files: [{
+          src: [
+            '<%%= dirs.temp %>',
+            '<%%= dirs.dist %>'
+          ]
+        }]
+      },
+      temp: '<%%= dirs.temp %>'
+    },
+    <% } %>
+
+    /**
+     * Server
+     */
+    express: {
+      options: {
+        port: 1337,
+        open: false,
+        livereload: false,
+        // change this to '0.0.0.0' to access the server from outside
+        hostname: '*'
+      },
+      livereload: {
+        options: {
+          livereload: 35729<% if (express) { %>,
+          serverreload: true,
+          server: 'index.js'<% } %>,
+          bases: [
+            'bower_components',
+            '<%%= dirs.temp %>',
+            '<%%= dirs.app %>',
+            '<%%= dirs.dist %>'
+          ]
+        }
+      },
+      dist: {
+        options: {
+          open: true,
+          bases: [
+            'bower_components',
+            '<%%= dirs.dist %>'
+          ]
+        }
+      }
+    },
+
+    /**
+     * Watch files and do stuff
+     */
+    watch: {<% if (addconfig || express || !choseType) { %>
+      base: {
+        files: [<% if (express) { %>'<%%= dirs.api %>/**/*.js'<% } %><% if (!choseType) { %>, '<%%= dirs.src %>/**/*.js'<% } %><% if (addconfig) { %>, '<%%= dirs.config %>/*.js', '<%%= dirs.config %>/*.json'<% } %>],
+        tasks: ['jshint:base'<% if (express) { %>, 'jshint:api'<% } %>]
+      }<% } %><% if (stylus) { %>,
+      styles: {
+        files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
+        tasks: ['stylus', 'csslint', 'injector:app']
+      }<% } %><% if (angular) { %>,
+      templates: {
+        files: ['<%%= dirs.app %>/**/*.html', '!<%%= dirs.app %>/<%%= modulename %>.html'],
+        tasks: ['html2js', 'injector:app']
+      },
+      index: {
+        files: ['<%%= dirs.app %>/<%%= modulename %>.html'],
+        tasks: ['copy:index']
+      },
+      app: {
+        files: ['<%%= dirs.app %>/**/*.js'],
+        tasks: ['injector:app', 'jshint:app']
+      }<% } %>
+    },
+    concurrent: {
+      livereload: {
+        options: {
+          logConcurrentOutput: true
+        },
+        tasks: [
+          'watch'<% if (express || angular) { %>,
+          'express:livereload'<% } %>
+        ]
+      }
+    },
+
+    <% if (stylus) { %>
+    /**
+     * Compile Stylus to CSS
+     */
+    stylus: {
+      options: {
+        compress: false
+      },
+      base: {
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.styles %>',
+          src: ['{,*/}*.styl', '!{,*/}_*.styl'],
+          dest: '<%%= dirs.temp %>/css',
+          ext: '.css'
+        }]
+      }<% if (angular) { %>,
+      app: {
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.app %>',
+          src: ['**/*.styl', '!**/_*.styl'],
+          dest: '<%%= dirs.temp %>/css',
+          ext: '.css'
+        }]
+      }<% } %>
+    },
+
+    /**
+     * Lint CSS
+     */
+    csslint: {
+      options: {
+        csslintrc: '.csslintrc'
+      },
+      all: {
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.temp %>/css',
+          src: ['**/*.css'],
+          ext: '.css'
+        }]
+      }
+    },
+
+    /**
+     * Minify CSS
+     */
+    cssmin: {
+      options: {
+        banner: '<%%= meta.banner %>'
+      },
+      dist: {
+        files: {
+          '<%%= dirs.dist %>/<%%= modulename %>.min.css': [ '<%%= dirs.dist %>/<%%= modulename %>.css' ]
+        }
+      }
+    },
+    <% } %>
+
+    <% if (angular) { %>
+    /**
+     * Compile AngularJS html templates to Javascript and inject into $templateCache
+     */
+    html2js: {
+      app: {
+        options: {
+          module: '<%%= modulename %>Templates',
+          base: '<%%= dirs.app %>',
+          rename: function (template) {
+            return '/' + modulename + '/' + template;
+          }
+        },
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.app %>',
+          src: ['**/*.html', '!<%%= modulename %>.html'],
+          dest: '<%%= dirs.temp %>',
+          rename: function () {
+            return '<%%= dirs.temp %>/<%%= modulename %>Templates.js';
+          }
+        }]
+      }
+    },
+
+    /**
+     * Dependency injection annotation for AngularJS modules
+     */
+    ngmin: {
+      dist: {
+        src: [ '<%%= dirs.dist %>/<%%= modulename %>.js' ],
+        dest: '<%%= dirs.dist %>/<%%= modulename %>.annotated.js'
+      }
+    },
+
+    /**
+     * Minify Javascripts
+     */
+    uglify: {
+      options: {
+        banner: '<%%= meta.banner %>'
+      },
+      dist: {
+        files: {
+          '<%%= dirs.dist %>/<%%= modulename %>.min.js': [ '<%%= dirs.dist %>/<%%= modulename %>.annotated.js' ]
+        }
+      }
+    },
+
+    /**
+     * The `index` task compiles the `index.html` file as a Grunt template
+     */
+    injector: {
+      options: {
+        destFile: '<%%= dirs.app %>/<%%= modulename %>.html'
+      },
+
+      bower: {
+        options: {
+          ignorePath: 'bower_components'
+        },
+        src: ['bower.json']
+      },
+      bowerMin: {
+        options: {
+          min: true,
+          ignorePath: 'bower_components'
+        },
+        src: ['bower.json']
+      },
+
+      /**
+       * During development, we don't want to have wait for compilation,
+       * concatenation, minification, etc. So to avoid these steps, we simply
+       * add all script files directly to the `<head>` of `index.html`. The
+       * `src` property contains the list of included files.
+       */
+      app: {
+        options: {
+          ignorePath: ['<%%= dirs.app %>', '<%%= dirs.temp %>']
+        },
+        files: [
+          {
+            expand: true,
+            cwd: '<%%= dirs.app %>',
+            src: ['<%%= modulename %>.js', '**/index.js', '**/*.js']
+          },
+          {
+            expand: true,
+            cwd: '<%%= dirs.temp %>',
+            src: ['*.js', '**/*.css']
+          }
+        ]
+      },
+
+      /**
+       * When it is time to have a completely compiled application, we can
+       * alter the above to include only a single JavaScript and a single CSS
+       * file. Now we're back!
+       */
+      dist: {
+        options: {
+          min: true
+        },
+        src: [
+          '<%%= dirs.dist %>/<%%= modulename %>.min.js',
+          '<%%= dirs.dist %>/<%%= modulename %>.min.css'
+        ]
+      }
+    },
+
+    copy: {
+      index: {
+        src: '<%%= dirs.app %>/<%%= modulename %>.html',
+        dest: '<%%= dirs.dist %>/index.html'
+      }
+    },
+    <% } %>
+
+    <% if (angular || stylus) { %>
+    /**
+     * Concat all source files
+     */
+    concat: {
+      options: {
+        banner: '<%%= meta.banner %>'
+      }<% if (angular) { %>,
+      app: {
+        src: [
+          '<%%= dirs.app %>/<%%= modulename %>.js',
+          '<%%= dirs.app %>/**/index.js',
+          '<%%= dirs.app %>/**/*.js',
+          '<%%= dirs.temp %>/*.js'
+        ],
+        dest: '<%%= dirs.dist %>/<%%= modulename %>.js'
+      }<% } %><% if (stylus) { %>,
+      styles: {
+        src: [
+          '<%%= dirs.temp %>/**/*.css'
+        ],
+        dest: '<%%= dirs.dist %>/<%%= modulename %>.css'
+      }<% } %>
+    },
+    <% } %>
+
+    /**
+     * Lint Javascript
+     */
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc',
+        reporter: require('jshint-stylish')
+      },
+      base: [
+        'Gruntfile.js'<% if (!choseType) { %>,
+        '<%%= dirs.src %>/*.js'<% } %><% if (addconfig) { %>,
+        '<%%= dirs.config %>/*.js'<% } %>
+      ]<% if (angular) { %>,
+      app: {
+        options: {
+          jshintrc: '<%%= dirs.app %>/.jshintrc'
+        },
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.app %>',
+          src: ['<%%= modulename %>.js', '**/index.js', '**/*.js'],
+          dest: '<%%= dirs.app %>'
+        }]
+      }<% } %><% if (express) { %>,
+      api: [
+        '<%%= dirs.api %>/**/*.js'
+      ]<% } %>
+    }
+  });
+
+  grunt.registerTask('serve', function (target) {
+    if (target === 'dist') {
+      return grunt.task.run(['dist', 'express:dist', 'express-keepalive']);
+    }
+    grunt.task.run([
+      'build',
+      'concurrent:livereload'
+    ]);
+  });
+
+  <% if (angular || stylus) { %>grunt.registerTask('build', [
+    'clean'<% if (angular) { %>,
+    'html2js'<% } %><% if (stylus) { %>,
+    'stylus:base'<% if (angular) { %>,
+    'stylus:app'<% } %>,
+    'csslint'<% } %><% if (angular) { %>,
+    'injector:bower',
+    'injector:app',
+    'copy:index'<% } %>
+  ]);<% } %>
+
+  <% if (angular || stylus) { %>grunt.registerTask('dist', [
+    'clean'<% if (angular) { %>,
+    'html2js',
+    'concat:app'<% } %><% if (stylus) { %>,
+    'stylus:base'<% if (angular) { %>,
+    'stylus:app'<% } %>,
+    'csslint',
+    'concat:styles',
+    'cssmin'<% } %><% if (angular) { %>,
+    'ngmin',
+    'uglify',
+    'injector:bowerMin',
+    'injector:dist',
+    'copy:index'<% } %>
+  ]);<% } %>
+
+  grunt.registerTask('default', [
+    'jshint'<% if (angular || stylus) { %>,
+    'build'<% } %>
+  ]);
+};
