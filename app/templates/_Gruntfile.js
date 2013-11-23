@@ -252,7 +252,8 @@ module.exports = function (grunt) {
             src: [
               'bower.json',
               'bower_components/angular-mocks/angular-mocks.js'
-            ]},
+            ]
+          },
           {
             expand: true,
             cwd: '<%%= dirs.app %>',
