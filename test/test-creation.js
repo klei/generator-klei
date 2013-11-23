@@ -58,7 +58,7 @@ describe('klei generator', function () {
 
   it('should create a main stylesheet (named after chosen modulename) if stylus is chosen', function (done) {
     var expected = [
-      'styles/myModule.styl'
+      'src/styles/myModule.styl'
     ];
 
     helpers.mockPrompt(klei, {
@@ -74,9 +74,9 @@ describe('klei generator', function () {
 
   it('should create a layout, module, bower.json and a jshintrc file if angular is chosen', function (done) {
     var expected = [
-      'app/myModule.html',
-      'app/myModule.js',
-      'app/.jshintrc',
+      'src/app/myModule.html',
+      'src/app/myModule.js',
+      'src/app/.jshintrc',
       'bower.json'
     ];
 
@@ -93,9 +93,9 @@ describe('klei generator', function () {
 
   it('should create config dir and files if addconfig is true', function (done) {
     var expected = [
-      'config/index.js',
-      'config/env.js',
-      'config/development.json'
+      'src/config/index.js',
+      'src/config/env.js',
+      'src/config/development.json'
     ];
 
     helpers.mockPrompt(klei, {
@@ -111,10 +111,10 @@ describe('klei generator', function () {
 
   it('should create a frontend module with a controller, spec and template if useexample is true and angular is chosen', function (done) {
     var expected = [
-      'app/todo/index.js',
-      'app/todo/TodoCtrl.js',
-      'app/todo/TodoCtrl.spec.js',
-      'app/todo/todo.html',
+      'src/app/todo/index.js',
+      'src/app/todo/TodoCtrl.js',
+      'src/app/todo/TodoCtrl.spec.js',
+      'src/app/todo/todo.html',
     ];
 
     helpers.mockPrompt(klei, {
@@ -143,9 +143,24 @@ describe('klei generator', function () {
     });
   });
 
+  it('should create a src dir no type is chosen', function (done) {
+    var expected = [
+      'src'
+    ];
+
+    helpers.mockPrompt(klei, {
+      'types': []
+    });
+    klei.options['skip-install'] = true;
+    klei.run({}, function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
   it('should create a frontend app dir if useexample is false and angular is chosen', function (done) {
     var expected = [
-      'app'
+      'src/app'
     ];
 
     helpers.mockPrompt(klei, {
@@ -161,7 +176,7 @@ describe('klei generator', function () {
 
   it('should create a frontend module stylesheet if useexample is true and both angular and stylus is chosen', function (done) {
     var expected = [
-      'app/todo/todo.styl'
+      'src/app/todo/todo.styl'
     ];
 
     helpers.mockPrompt(klei, {
@@ -177,7 +192,7 @@ describe('klei generator', function () {
 
   it('should create an api module with controller if useexample is true and express is chosen', function (done) {
     var expected = [
-      'api/todo/todo.controller.js'
+      'src/api/todo/todo.controller.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -193,7 +208,7 @@ describe('klei generator', function () {
 
   it('should create an api module with a model if useexample is true and both express and mongo is chosen', function (done) {
     var expected = [
-      'api/todo/Todo.model.js'
+      'src/api/todo/Todo.model.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -209,7 +224,7 @@ describe('klei generator', function () {
 
   it('should create an api dir if useexample is false and express is chosen', function (done) {
     var expected = [
-      'api'
+      'src/api'
     ];
 
     helpers.mockPrompt(klei, {
@@ -225,7 +240,7 @@ describe('klei generator', function () {
 
   it('should create a model if useexample is true and mongo is chosen', function (done) {
     var expected = [
-      'models/Todo.js'
+      'src/models/Todo.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -241,12 +256,42 @@ describe('klei generator', function () {
 
   it('should create a model dir if useexample is false and mongo is chosen', function (done) {
     var expected = [
-      'models'
+      'src/models'
     ];
 
     helpers.mockPrompt(klei, {
       'types': ['mongo'],
       'useexample': true
+    });
+    klei.options['skip-install'] = true;
+    klei.run({}, function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
+  it('should create an index file if mongo is chosen', function (done) {
+    var expected = [
+      'src/index.js'
+    ];
+
+    helpers.mockPrompt(klei, {
+      'types': ['mongo']
+    });
+    klei.options['skip-install'] = true;
+    klei.run({}, function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
+  it('should create an index file if express is chosen', function (done) {
+    var expected = [
+      'src/index.js'
+    ];
+
+    helpers.mockPrompt(klei, {
+      'types': ['express']
     });
     klei.options['skip-install'] = true;
     klei.run({}, function () {

@@ -14,13 +14,13 @@ module.exports = function (grunt) {
      * Source dirs
      */
     dirs: {
-      <% if (!choseType) { %>src: 'src'<% } %>
-      <% if (angular) { %>app: 'app'<% } %><% if (express) { %>,
-      api: 'api'<% } %><% if (stylus) { %>,
-      styles: 'styles'<% } %><% if (angular || stylus) { %>,
+      src: 'src'<% if (angular) { %>,
+      app: 'src/app'<% } %><% if (express) { %>,
+      api: 'src/api'<% } %><% if (stylus) { %>,
+      styles: 'src/styles'<% } %><% if (angular || stylus) { %>,
       dist: 'dist',
       temp: '.tmp'<% } %><% if (addconfig) { %>,
-      config: 'config'<% } %>
+      config: 'src/config'<% } %>
     },
 
     <% if (angular || stylus) { %>
@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         options: {
           livereload: 35729<% if (express) { %>,
           serverreload: true,
-          server: 'index.js'<% } %>,
+          server: '<%%= dirs.src %>/index.js'<% } %>,
           bases: [
             'bower_components',
             '<%%= dirs.temp %>',

@@ -122,38 +122,40 @@ KleiGenerator.prototype.basicFiles = function basicFiles() {
   this.template('_package.json', 'package.json');
   this.template('_Gruntfile.js', 'Gruntfile.js');
 
+  this.mkdir('src');
+
   if (this.addconfig || this.express || this.mongo) {
-    this.mkdir('config');
-    this.copy('config/index.js', 'config/index.js');
-    this.copy('config/env.js', 'config/env.js');
-    this.template('config/_development.json', 'config/development.json');
+    this.mkdir('src/config');
+    this.copy('config/index.js', 'src/config/index.js');
+    this.copy('config/env.js', 'src/config/env.js');
+    this.template('config/_development.json', 'src/config/development.json');
   }
 };
 
 KleiGenerator.prototype.backendFiles = function backendFiles() {
   if (this.express || this.mongo) {
-    this.template('_index.js', 'index.js');
+    this.template('_index.js', 'src/index.js');
   }
   if (this.express) {
-    this.mkdir('api');
+    this.mkdir('src/api');
 
     if (this.useexample) {
-      this.mkdir('api/todo');
+      this.mkdir('src/api/todo');
 
       if (this.mongo) {
-        this.copy('api/todo/todo.controller.js', 'api/todo/todo.controller.js');
-        this.copy('api/todo/Todo.model.js', 'api/todo/Todo.model.js');
+        this.copy('api/todo/todo.controller.js', 'src/api/todo/todo.controller.js');
+        this.copy('api/todo/Todo.model.js', 'src/api/todo/Todo.model.js');
       } else {
-        this.copy('api/todo-nomongo/todo.controller.js', 'api/todo/todo.controller.js');
+        this.copy('api/todo-nomongo/todo.controller.js', 'src/api/todo/todo.controller.js');
       }
     }
   } else if (this.mongo) {
-    this.mkdir('models');
+    this.mkdir('src/models');
     if (this.useexample) {
-      this.copy('models/Todo.js', 'models/Todo.js');
+      this.copy('models/Todo.js', 'src/models/Todo.js');
     }
   } else if (!this.choseType) {
-    this.mkdir('src');
+
   }
 };
 
@@ -163,26 +165,26 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
   }
   if (this.stylus) {
     this.copy('csslintrc', '.csslintrc');
-    this.mkdir('styles');
-    this.copy('styles/module.styl', 'styles/' + this.modulename + '.styl');
+    this.mkdir('src/styles');
+    this.copy('styles/module.styl', 'src/styles/' + this.modulename + '.styl');
   }
   if (this.angular) {
     this.mkdir('app');
-    this.template('app/_module.js', 'app/' + this.modulename + '.js');
-    this.template('app/_module.html', 'app/' + this.modulename + '.html');
-    this.template('app/jshintrc', 'app/.jshintrc');
+    this.template('app/_module.js', 'src/app/' + this.modulename + '.js');
+    this.template('app/_module.html', 'src/app/' + this.modulename + '.html');
+    this.template('app/jshintrc', 'src/app/.jshintrc');
 
     this.mkdir('karma');
     this.copy('karma/karma.conf.js', 'karma/karma.conf.js');
 
     if (this.useexample) {
-      this.mkdir('app/todo');
-      this.template('app/todo/_index.js', 'app/todo/index.js');
-      this.template('app/todo/_TodoCtrl.js', 'app/todo/TodoCtrl.js');
-      this.template('app/todo/_TodoCtrl.spec.js', 'app/todo/TodoCtrl.spec.js');
-      this.copy('app/todo/todo.html', 'app/todo/todo.html');
+      this.mkdir('src/app/todo');
+      this.template('app/todo/_index.js', 'src/app/todo/index.js');
+      this.template('app/todo/_TodoCtrl.js', 'src/app/todo/TodoCtrl.js');
+      this.template('app/todo/_TodoCtrl.spec.js', 'src/app/todo/TodoCtrl.spec.js');
+      this.copy('app/todo/todo.html', 'src/app/todo/todo.html');
       if (this.stylus) {
-        this.copy('app/todo/todo.styl', 'app/todo/todo.styl');
+        this.copy('app/todo/todo.styl', 'src/app/todo/todo.styl');
       }
     }
   }
