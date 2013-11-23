@@ -16,14 +16,6 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false,
-    "describe": false,
-    "it": false,
-    "before": false,
-    "beforeEach": false,
-    "after": false,
-    "afterEach": false,
-    "expect": false,
-    "should": false
+    "angular": false
   }
 }

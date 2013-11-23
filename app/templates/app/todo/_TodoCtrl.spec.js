@@ -1,3 +1,5 @@
+/*global describe, it*/
+'use strict';
 
 describe('TodoCtrl', function () {
   it('should do what...', function () {
