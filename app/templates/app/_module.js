@@ -4,7 +4,7 @@ angular.module('<%= modulename %>', [
   <% if (useexample) { %>'<%= modulename %>.todo',
   <% } %>'<%= modulename %>Templates'
 ])<% if (useexample) { %>
-.config(function ($routeProvider, $locationProvider) {
+.config(function ($routeProvider) {
   'use strict';
   $routeProvider
     .when('/todo', {
@@ -14,6 +14,4 @@ angular.module('<%= modulename %>', [
     .otherwise({
       redirectTo: '/todo'
     });
-  <% if (express) { %>
-  $locationProvider.html5Mode(true);<% } %>
 })<% } %>;

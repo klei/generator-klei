@@ -44,7 +44,7 @@ angular
 
     $scope.check = function () {
       this.todo.done = !this.todo.done;<% if (express) { %>
-      $http.put('/api/todo/' + this.todo.id, this.todo)
+      $http.put('/api/todo/' + this.todo.<% if (mongo) { %>_<% } %>id, this.todo)
         .error(function (err) {
           console.error('Oops!', err);
         });<% } %>

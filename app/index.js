@@ -53,36 +53,56 @@ KleiGenerator.prototype.askForModulename = function askForModulename() {
   }.bind(this));
 };
 
-KleiGenerator.prototype.askForModuleType = function askForModuleType() {
+KleiGenerator.prototype.ask = function ask() {
   var cb = this.async();
 
-  var prompts = [{
-    type: 'checkbox',
-    name: 'types',
-    message: 'What pieces do you want to build your module with? ' + $comment('(uncheck all for a pure Node.js module)'),
-    choices: [
-      {
-        value: 'express',
-        name: 'REST API ' + $comment('(using ' + $info('express.js') + ')'),
-        checked: true
-      },
-      {
-        value: 'mongo',
-        name: 'MongoDB ' + $comment('(using ' + $info('Mongoose') + ')'),
-        checked: true
-      },
-      {
-        value: 'angular',
-        name: 'Client APP ' + $comment('(using ' + $info('AngularJS') + ')'),
-        checked: true
-      },
-      {
-        value: 'stylus',
-        name: 'Stylesheets ' + $comment('(using ' + $info('Stylus') + ')'),
-        checked: true
+  var prompts = [
+    {
+      type: 'checkbox',
+      name: 'types',
+      message: 'What pieces do you want to build your module with? ' + $comment('(uncheck all for a pure Node.js module)'),
+      choices: [
+        {
+          value: 'express',
+          name: 'REST API ' + $comment('(using ' + $info('express.js') + ')'),
+          checked: true
+        },
+        {
+          value: 'mongo',
+          name: 'MongoDB ' + $comment('(using ' + $info('Mongoose') + ')'),
+          checked: true
+        },
+        {
+          value: 'angular',
+          name: 'Client APP ' + $comment('(using ' + $info('AngularJS') + ')'),
+          checked: true
+        },
+        {
+          value: 'stylus',
+          name: 'Stylesheets ' + $comment('(using ' + $info('Stylus') + ')'),
+          checked: true
+        }
+      ]
+    },
+    {
+      type: 'confirm',
+      name: 'addconfig',
+      message: 'Should a config dir be added to your module as well? ' + $comment('(for environment specific settings and such)'),
+      default: true,
+      when: function (props) {
+        return !props.types.length;
       }
-    ]
-  }];
+    },
+    {
+      type: 'confirm',
+      name: 'useexample',
+      message: 'Should a simple Todo list example be generated as well?',
+      default: true,
+      when: function (props) {
+        return props.types.indexOf('angular') > -1 || props.types.indexOf('express');
+      }
+    }
+  ];
 
   this.prompt(prompts, function (props) {
     var checked = function (val) { return props.types.indexOf(val) > -1; };
@@ -91,45 +111,7 @@ KleiGenerator.prototype.askForModuleType = function askForModuleType() {
     this.express = checked('express');
     this.stylus = checked('stylus');
     this.choseType = !!props.types.length;
-
-    cb();
-  }.bind(this));
-};
-
-KleiGenerator.prototype.askForConfig = function askForConfig() {
-  var cb = this.async();
-
-  var prompts = [{
-    type: 'confirm',
-    name: 'addconfig',
-    message: 'Should a config dir be added to your module as well? ' + $comment('(for environment specific settings and such)'),
-    default: true,
-    when: function () {
-      return !this.choseType;
-    }
-  }];
-
-  this.prompt(prompts, function (props) {
     this.addconfig = props.addconfig;
-
-    cb();
-  }.bind(this));
-};
-
-KleiGenerator.prototype.askForExample = function askForExample() {
-  var cb = this.async();
-
-  var prompts = [{
-    type: 'confirm',
-    name: 'useexample',
-    message: 'Should a simple Todo list example be generated as well?',
-    default: this.angular || this.express,
-    when: function () {
-      return this.angular || this.express;
-    }
-  }];
-
-  this.prompt(prompts, function (props) {
     this.useexample = props.useexample;
 
     cb();
