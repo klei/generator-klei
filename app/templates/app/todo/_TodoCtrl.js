@@ -1,6 +1,6 @@
 
 angular
-  .module('<%= modulename %>.todo', [])
+  .module('<%= modulename %>.todo')
   .controller('TodoCtrl', function ($scope<% if (express) { %>, Restangular, $log<% } %>) {
     'use strict';
     <% if (express) {

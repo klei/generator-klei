@@ -172,6 +172,7 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
 
     if (this.useexample) {
       this.mkdir('app/todo');
+      this.template('app/todo/_index.js', 'app/todo/index.js');
       this.template('app/todo/_TodoCtrl.js', 'app/todo/TodoCtrl.js');
       this.copy('app/todo/todo.html', 'app/todo/todo.html');
       if (this.stylus) {
