@@ -46,7 +46,7 @@ KleiGenerator.prototype.askForModulename = function askForModulename() {
 
   this.prompt(prompts, function (props) {
     this.modulename = this._.camelize(this._.slugify(this._.humanize(props.modulename)));
-    this.modulenameCamel = this.modulename[0].toLowerCase() + this.modulename.slice(1);
+    this.modulenameCamel = this.modulename ? this.modulename[0].toLowerCase() + this.modulename.slice(1) : '';
     this.modulenameDashed = this._.dasherize(this.modulenameCamel);
 
     cb();
@@ -135,9 +135,9 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
     this.template('_index.js', 'index.js');
   }
   if (this.express) {
+    this.mkdir('api');
 
     if (this.useexample) {
-      this.mkdir('api');
       this.mkdir('api/todo');
 
       if (this.mongo) {
@@ -149,7 +149,9 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
     }
   } else if (this.mongo) {
     this.mkdir('models');
-    this.copy('models/Todo.js', 'models/Todo.js');
+    if (this.useexample) {
+      this.copy('models/Todo.js', 'models/Todo.js');
+    }
   } else if (!this.choseType) {
     this.mkdir('src');
   }
