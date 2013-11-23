@@ -92,11 +92,11 @@ module.exports = function (grunt) {
     watch: {<% if (addconfig || express || !choseType) { %>
       base: {
         files: [<% if (express) { %>'<%%= dirs.api %>/**/*.js'<% } %><% if (!choseType) { %>, '<%%= dirs.src %>/**/*.js'<% } %><% if (addconfig) { %>, '<%%= dirs.config %>/*.js', '<%%= dirs.config %>/*.json'<% } %>],
-        tasks: ['jshint:base'<% if (express) { %>, 'jshint:api'<% } %>]
+        tasks: ['newer:jshint:base'<% if (express) { %>, 'newer:jshint:api'<% } %>]
       }<% } %><% if (stylus) { %>,
       styles: {
         files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
-        tasks: ['stylus', 'csslint', 'injector:app']
+        tasks: ['newer:stylus', 'newer:csslint', 'injector:app']
       }<% } %><% if (angular) { %>,
       templates: {
         files: ['<%%= dirs.app %>/**/*.html', '!<%%= dirs.app %>/<%%= modulename %>.html'],
@@ -108,7 +108,7 @@ module.exports = function (grunt) {
       },
       app: {
         files: ['<%%= dirs.app %>/**/*.js'],
-        tasks: ['injector:app', 'jshint:app']
+        tasks: ['injector:app', 'newer:jshint:app']
       }<% } %>
     },
     concurrent: {
