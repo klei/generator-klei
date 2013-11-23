@@ -170,10 +170,14 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
     this.template('app/_module.html', 'app/' + this.modulename + '.html');
     this.template('app/jshintrc', 'app/.jshintrc');
 
+    this.mkdir('karma');
+    this.copy('karma/karma.conf.js', 'karma/karma.conf.js');
+
     if (this.useexample) {
       this.mkdir('app/todo');
       this.template('app/todo/_index.js', 'app/todo/index.js');
       this.template('app/todo/_TodoCtrl.js', 'app/todo/TodoCtrl.js');
+      this.template('app/todo/_TodoCtrl.spec.js', 'app/todo/TodoCtrl.spec.js');
       this.copy('app/todo/todo.html', 'app/todo/todo.html');
       if (this.stylus) {
         this.copy('app/todo/todo.styl', 'app/todo/todo.styl');

@@ -240,6 +240,37 @@ module.exports = function (grunt) {
         destFile: '<%%= dirs.app %>/<%%= modulename %>.html'
       },
 
+      karmaconf: {
+        options: {
+          destFile: 'karma/karma.conf.js',
+          starttag: '/** injector **/',
+          endtag: '/** endinjector **/',
+          transform: function (file) { return '\'' + file.slice(1) + '\','; }
+        },
+        files: [
+          {
+            src: [
+              'bower.json',
+              'bower_components/angular-mocks/angular-mocks.js'
+            ]},
+          {
+            expand: true,
+            cwd: '<%%= dirs.app %>',
+            src: ['<%%= modulename %>.js', '**/index.js', '**/*.js', '!**/*.spec.js']
+          },
+          {
+            expand: true,
+            cwd: '<%%= dirs.temp %>',
+            src: ['*.js']
+          },
+          {
+            expand: true,
+            cwd: '<%%= dirs.app %>',
+            src: ['**/*.spec.js']
+          }
+        ]
+      },
+
       bower: {
         options: {
           ignorePath: 'bower_components'
@@ -268,7 +299,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '<%%= dirs.app %>',
-            src: ['<%%= modulename %>.js', '**/index.js', '**/*.js']
+            src: ['<%%= modulename %>.js', '**/index.js', '**/*.js', '!**/*.spec.js']
           },
           {
             expand: true,
@@ -291,6 +322,21 @@ module.exports = function (grunt) {
           '<%%= dirs.dist %>/<%%= modulename %>.min.js',
           '<%%= dirs.dist %>/<%%= modulename %>.min.css'
         ]
+      }
+    },
+
+    /**
+     * The Karma configurations.
+     */
+    karma: {
+      options: {
+        configFile: 'karma/karma.conf.js'
+      },
+      unit: {
+        background: true
+      },
+      continuous: {
+        singleRun: true
       }
     },
 
@@ -366,7 +412,9 @@ module.exports = function (grunt) {
       'build',
       'concurrent:livereload'
     ]);
-  });
+  });<% if (angular) { %>
+
+  grunt.registerTask('test', ['injector:karmaconf', 'karma:continuous']);<% } %>
 
   <% if (angular || stylus) { %>grunt.registerTask('build', [
     'clean'<% if (angular) { %>,

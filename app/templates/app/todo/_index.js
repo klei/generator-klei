@@ -1,0 +1,2 @@
+
+angular.module('<%= modulename %>.todo', []);
