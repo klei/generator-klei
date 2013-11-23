@@ -1,15 +1,16 @@
 
 angular
   .module('<%= modulename %>.todo', [])
-  .controller('TodoCtrl', function ($scope<% if (express) { %>, $http<% } %>) {
+  .controller('TodoCtrl', function ($scope<% if (express) { %>, Restangular, $log<% } %>) {
     'use strict';
     <% if (express) {
-    %>$http.get('/api/todo')
-      .success(function (result) {
-        $scope.todos = result;
+    %>var Todo = Restangular.all('todo');
+    Todo.getList()
+      .then(function (todos) {
+        $scope.todos = todos;
       })
-      .error(function (err) {
-        console.error('Oops!', err);
+      .catch(function (err) {
+        $log.error(err);
       });<%
     } else {
     %>$scope.todos = JSON.parse(localStorage.getItem('todos') || '[]');
@@ -24,13 +25,13 @@ angular
       var todo = {label: $scope.label, done: false};
       <% if (express) {
       %>$scope.posting = true;
-      $http.post('/api/todo', todo)
-        .success(function (todo) {
+      Todo.post(todo)
+        .then(function (todo) {
           $scope.todos.push(todo);
           $scope.label = '';
         })
-        .error(function (err) {
-          console.error('Oops!', err);
+        .catch(function (err) {
+          $log.error(err);
         })
         .finally(function () {
           $scope.posting = false;
@@ -44,9 +45,8 @@ angular
 
     $scope.check = function () {
       this.todo.done = !this.todo.done;<% if (express) { %>
-      $http.put('/api/todo/' + this.todo.<% if (mongo) { %>_<% } %>id, this.todo)
-        .error(function (err) {
-          console.error('Oops!', err);
-        });<% } %>
+      this.todo.put().catch(function (err) {
+        $log.error(err);
+      });<% } %>
     };
   });

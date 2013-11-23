@@ -2,9 +2,9 @@
 angular.module('<%= modulename %>', [
   'ngRoute',
   <% if (useexample) { %>'<%= modulename %>.todo',
-  <% } %>'<%= modulename %>Templates'
+  <% if (express) { %>'restangular',<% } %><% } %>'<%= modulename %>Templates'
 ])<% if (useexample) { %>
-.config(function ($routeProvider) {
+.config(function ($routeProvider<% if (express) { %>, RestangularProvider<% } %>) {
   'use strict';
   $routeProvider
     .when('/todo', {
@@ -13,5 +13,10 @@ angular.module('<%= modulename %>', [
     })
     .otherwise({
       redirectTo: '/todo'
-    });
+    });<% if (express) { %>
+
+  RestangularProvider.setBaseUrl('/api');<% if (mongo) { %>
+  RestangularProvider.setRestangularFields({
+    id: '_id'
+  });<% } %><% } %>
 })<% } %>;

@@ -17,10 +17,11 @@
     "tests"
   ],
   "dependencies": {
-    <% if (angular) { %>"angular": "1.2.1",
-    "angular-route": "1.2.1"<% } %>
+    <% if (angular) { %>"angular": "~1.2.2",
+    "angular-route": "~1.2.2"<% if (express) { %>,
+    "restangular": "~1.1.8"<% } %><% } %>
   },
   "devDependencies": {
-    <% if (angular) { %>"angular-mocks": "1.2.1"<% } %>
+    <% if (angular) { %>"angular-mocks": "~1.2.2"<% } %>
   }
 }
