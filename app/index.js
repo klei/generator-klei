@@ -169,7 +169,7 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
     this.copy('styles/module.styl', 'src/styles/' + this.modulename + '.styl');
   }
   if (this.angular) {
-    this.mkdir('app');
+    this.mkdir('src/app');
     this.template('app/_module.js', 'src/app/' + this.modulename + '.js');
     this.template('app/_module.html', 'src/app/' + this.modulename + '.html');
     this.template('app/jshintrc', 'src/app/.jshintrc');
