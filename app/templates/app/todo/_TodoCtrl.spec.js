@@ -34,10 +34,10 @@ describe('TodoCtrl', function () {
     $httpBackend.when('POST', '/api/todo').respond(todo);<% } %>
     scope.label = todo.label;
     scope.add();<% if (express) { %>
-    scope.posting.should.be.true;
+    scope.posting.should.equal(true);
     $httpBackend.flush();
-    scope.posting.should.be.false;<% } %>
-    scope.label.should.be.empty;
+    scope.posting.should.equal(false);<% } %>
+    scope.label.length.should.equal(0);
     scope.todos.length.should.equal(<% if (express) { %>3<% } else { %>1<% } %>);<% if (express) { %>
     scope.todos[scope.todos.length - 1]._id.should.equal('abc123');<% } %>
     scope.todos[scope.todos.length - 1].label.should.equal(todo.label);
