@@ -93,11 +93,11 @@ module.exports = function (grunt) {
       base: {
         files: [<% if (express) { %>'<%%= dirs.api %>/**/*.js'<% } %><% if (!choseType) { %>, '<%%= dirs.src %>/**/*.js'<% } %><% if (addconfig) { %>, '<%%= dirs.config %>/*.js', '<%%= dirs.config %>/*.json'<% } %>],
         tasks: ['newer:jshint:base'<% if (express) { %>, 'newer:jshint:api'<% } %>]
-      }<% } %><% if (stylus) { %>,
+      },<% } %><% if (stylus) { %>
       styles: {
         files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
         tasks: ['newer:stylus', 'newer:csslint', 'injector:app']
-      }<% } %><% if (angular) { %>,
+      },<% } %><% if (angular) { %>
       templates: {
         files: ['<%%= dirs.app %>/**/*.html', '!<%%= dirs.app %>/<%%= modulename %>.html'],
         tasks: ['html2js', 'injector:app']
