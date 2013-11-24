@@ -16,7 +16,7 @@ angular
     %>$scope.todos = JSON.parse(localStorage.getItem('todos') || '[]');
     $scope.$watch('todos', function (newTodos, oldTodos) {
       if (newTodos !== oldTodos) {
-        localStorage.setItem('todos', JSON.stringify(angular.copy($scope.todos));
+        localStorage.setItem('todos', JSON.stringify(angular.copy($scope.todos)));
       }
     }, true);<%
     } %>
