@@ -64,8 +64,9 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: 35729<% if (express) { %>,
-          serverreload: true,
+          livereload: 35729,
+          serverreload: true<% if (express) { %>,
+          showStack: true,
           server: '<%%= dirs.src %>/index.js'<% } %>,
           bases: [
             'bower_components',
