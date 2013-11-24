@@ -77,7 +77,8 @@ module.exports = function (grunt) {
       },
       dist: {
         options: {
-          open: true,
+          open: true<% if (express) { %>,
+          server: '<%%= dirs.src %>/index.js'<% } %>,
           bases: [
             'bower_components',
             '<%%= dirs.dist %>'
@@ -317,7 +318,8 @@ module.exports = function (grunt) {
        */
       dist: {
         options: {
-          min: true
+          min: true,
+          ignorePath: 'dist'
         },
         src: [
           '<%%= dirs.dist %>/<%%= modulename %>.min.js',
@@ -362,7 +364,8 @@ module.exports = function (grunt) {
           '<%%= dirs.app %>/<%%= modulename %>.js',
           '<%%= dirs.app %>/**/index.js',
           '<%%= dirs.app %>/**/*.js',
-          '<%%= dirs.temp %>/*.js'
+          '<%%= dirs.temp %>/*.js',
+          '!<%%= dirs.app %>/**/*.spec.js'
         ],
         dest: '<%%= dirs.dist %>/<%%= modulename %>.js'
       }<% } %><% if (stylus) { %>,
