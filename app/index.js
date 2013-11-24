@@ -170,6 +170,7 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
   if (this.stylus) {
     this.copy('csslintrc', '.csslintrc');
     this.mkdir('src/styles');
+    this.template('styles/_styleguide.html', 'src/styles/styleguide.html');
     this.copy('styles/module.styl', 'src/styles/' + this.modulename + '.styl');
   }
   if (this.angular) {

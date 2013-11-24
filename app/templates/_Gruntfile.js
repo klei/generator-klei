@@ -48,8 +48,7 @@ module.exports = function (grunt) {
         }]
       },
       temp: '<%%= dirs.temp %>'
-    },
-    <% } %>
+    },<% } %>
 
     /**
      * Server
@@ -99,7 +98,11 @@ module.exports = function (grunt) {
       },<% } %><% if (stylus) { %>
       styles: {
         files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
-        tasks: ['newer:stylus', 'newer:csslint', 'injector:app']
+        tasks: ['newer:stylus', 'newer:csslint', 'injector:app', 'injector:styleguide']
+      },
+      styleguide: {
+        files: ['<%%= dirs.styles %>/styleguide.html'],
+        tasks: ['copy:styleguide']
       },<% } %><% if (angular) { %>
       templates: {
         files: ['<%%= dirs.app %>/**/*.html', '!<%%= dirs.app %>/<%%= modulename %>.html'],
@@ -118,10 +121,11 @@ module.exports = function (grunt) {
           livereload: 35729
         },
         files: [
-          '<%%= dirs.dist %>/index.html',
+          <% if (angular) { %>'<%%= dirs.dist %>/index.html',
           '<%%= dirs.app %>/**/*.js',
-          '<%%= dirs.temp %>/*.js',
-          '<%%= dirs.temp %>/**/*.css'
+          '<%%= dirs.temp %>/*.js',<% } %><% if (stylus) { %>
+          '<%%= dirs.dist %>/styleguide.html',
+          '<%%= dirs.temp %>/**/*.css'<% } %>
         ]
       }<% } %>
     },
@@ -196,11 +200,9 @@ module.exports = function (grunt) {
           '<%%= dirs.dist %>/<%%= modulename %>.min.css': [ '<%%= dirs.dist %>/<%%= modulename %>.css' ]
         }
       }
-    },
-    <% } %>
+    },<% } %>
 
-    <% if (angular) { %>
-    /**
+    <% if (angular) { %>/**
      * Compile AngularJS html templates to Javascript and inject into $templateCache
      */
     html2js: {
@@ -249,14 +251,49 @@ module.exports = function (grunt) {
     },
 
     /**
-     * The `index` task compiles the `index.html` file as a Grunt template
+     * The Karma configurations.
+     */
+    karma: {
+      options: {
+        configFile: 'karma/karma.conf.js'
+      },
+      unit: {
+        background: true
+      },
+      continuous: {
+        singleRun: true
+      }
+    },<% } %>
+
+    <% if (angular || stylus) { %>/**
+     * The `injector` task injects all scripts/stylesheets into the `index.html` file
      */
     injector: {
       options: {
         destFile: '<%%= dirs.app %>/<%%= modulename %>.html'
+      },<% if (stylus) { %>
+      styleguide: {
+        options: {
+          destFile: '<%%= dirs.styles %>/styleguide.html'
+        },
+        files: [
+          {src: ['bower.json']},
+          {
+            expand: true,
+            cwd: '<%%= dirs.temp %>',
+            src: ['**/*.css']
+          }
+        ]
       },
+      styleguideMin: {
+        options: {
+          min: true,
+          destFile: '<%%= dirs.styles %>/styleguide.html'
+        },
+        src: ['bower.json', '<%%= dirs.dist %>/<%%= modulename %>.min.css']
+      },<% } %>
 
-      karmaconf: {
+      <% if (angular) { %>karmaconf: {
         options: {
           destFile: 'karma/karma.conf.js',
           starttag: '/** injector **/',
@@ -288,25 +325,9 @@ module.exports = function (grunt) {
         ]
       },
 
-      bower: {
-        options: {
-          ignorePath: 'bower_components'
-        },
-        src: ['bower.json']
-      },
-      bowerMin: {
-        options: {
-          min: true,
-          ignorePath: 'bower_components'
-        },
-        src: ['bower.json']
-      },
-
       /**
-       * During development, we don't want to have wait for compilation,
-       * concatenation, minification, etc. So to avoid these steps, we simply
-       * add all script files directly to the `<head>` of `index.html`. The
-       * `src` property contains the list of included files.
+       * Inject all needed files during development to not
+       * have to wait for minification, concatination, etc.
        */
       app: {
         options: {
@@ -327,9 +348,7 @@ module.exports = function (grunt) {
       },
 
       /**
-       * When it is time to have a completely compiled application, we can
-       * alter the above to include only a single JavaScript and a single CSS
-       * file. Now we're back!
+       * Use concatenated and minified sources for dist mode
        */
       dist: {
         options: {
@@ -340,33 +359,34 @@ module.exports = function (grunt) {
           '<%%= dirs.dist %>/<%%= modulename %>.min.js',
           '<%%= dirs.dist %>/<%%= modulename %>.min.css'
         ]
+      },<% } %>
+
+      bower: {
+        options: {
+          ignorePath: 'bower_components'
+        },
+        src: ['bower.json']
+      },
+      bowerMin: {
+        options: {
+          min: true,
+          ignorePath: 'bower_components'
+        },
+        src: ['bower.json']
       }
     },
 
-    /**
-     * The Karma configurations.
-     */
-    karma: {
-      options: {
-        configFile: 'karma/karma.conf.js'
-      },
-      unit: {
-        background: true
-      },
-      continuous: {
-        singleRun: true
-      }
-    },
-
-    copy: {
+    copy: {<% if (angular) { %>
       index: {
         src: '<%%= dirs.app %>/<%%= modulename %>.html',
         dest: '<%%= dirs.dist %>/index.html'
-      }
+      },<% } %><% if (stylus) { %>
+      styleguide: {
+        src: '<%%= dirs.styles %>/styleguide.html',
+        dest: '<%%= dirs.dist %>/styleguide.html'
+      }<% } %>
     },
-    <% } %>
 
-    <% if (angular || stylus) { %>
     /**
      * Concat all source files
      */
@@ -441,7 +461,9 @@ module.exports = function (grunt) {
     'html2js'<% } %><% if (stylus) { %>,
     'stylus:base'<% if (angular) { %>,
     'stylus:app'<% } %>,
-    'csslint'<% } %><% if (angular) { %>,
+    'csslint',
+    'injector:styleguide',
+    'copy:styleguide'<% } %><% if (angular) { %>,
     'injector:bower',
     'injector:app',
     'copy:index'<% } %>
@@ -455,7 +477,9 @@ module.exports = function (grunt) {
     'stylus:app'<% } %>,
     'csslint',
     'concat:styles',
-    'cssmin'<% } %><% if (angular) { %>,
+    'cssmin',
+    'injector:styleguideMin',
+    'copy:styleguide'<% } %><% if (angular) { %>,
     'ngmin',
     'uglify',
     'injector:bowerMin',

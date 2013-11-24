@@ -72,6 +72,22 @@ describe('klei generator', function () {
     });
   });
 
+  it('should create a styleguide template if stylus is chosen', function (done) {
+    var expected = [
+      'src/styles/styleguide.html'
+    ];
+
+    helpers.mockPrompt(klei, {
+      'types': ['stylus'],
+      'modulename': 'myModule'
+    });
+    klei.options['skip-install'] = true;
+    klei.run({}, function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
   it('should create a layout, module, bower.json and a jshintrc file if angular is chosen', function (done) {
     var expected = [
       'src/app/myModule.html',
