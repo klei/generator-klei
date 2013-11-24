@@ -54,7 +54,7 @@ module.exports = function (grunt) {
     /**
      * Server
      */
-    express: {
+    <% if (express) { %>'express'<% } else { %>'connect'<% } %>: {
       options: {
         port: 1337,
         open: false,
@@ -64,11 +64,12 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: 35729,
-          serverreload: true<% if (express) { %>,
+          livereload: 35729<% if (express) { %>,
+          serverreload: true,
           showStack: true,
-          server: '<%%= dirs.src %>/index.js'<% } %>,
-          bases: [
+          server: '<%%= dirs.src %>/index.js'<% } else { %>,
+          open: true<% } %>,
+          base<% if (express) { %>s<% } %>: [
             'bower_components',
             '<%%= dirs.temp %>',
             '<%%= dirs.app %>',
@@ -77,9 +78,9 @@ module.exports = function (grunt) {
         }
       },
       dist: {
-        options: {
-          open: true<% if (express) { %>,
-          server: '<%%= dirs.src %>/index.js'<% } %>,
+        options: {<% if (express) { %>
+          open: true,
+          server: '<%%= dirs.src %>/index.js',<% } %>
           bases: [
             'bower_components',
             '<%%= dirs.dist %>'
@@ -109,21 +110,34 @@ module.exports = function (grunt) {
         tasks: ['copy:index']
       },
       app: {
-        files: ['<%%= dirs.app %>/**/*.js'],
+        files: ['<%%= dirs.app %>/**/*.js', '!<%%= dirs.app %>/**/*.spec.js'],
         tasks: ['injector:app', 'newer:jshint:app']
+      },<% } %><% if ((angular || stylus) && !express) { %>
+      livereload: {
+        options: {
+          livereload: 35729
+        },
+        files: [
+          '<%%= dirs.dist %>/index.html',
+          '<%%= dirs.app %>/**/*.js',
+          '<%%= dirs.temp %>/*.js',
+          '<%%= dirs.temp %>/**/*.css'
+        ]
       }<% } %>
     },
+
+    <% if (express) { %>
     concurrent: {
       livereload: {
         options: {
           logConcurrentOutput: true
         },
         tasks: [
-          'watch'<% if (express || angular) { %>,
-          'express:livereload'<% } %>
+          'watch',
+          'express:livereload'
         ]
       }
-    },
+    },<% } %>
 
     <% if (stylus) { %>
     /**
@@ -411,11 +425,12 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['dist', 'express:dist', 'express-keepalive']);
+      return grunt.task.run(['dist', <% if (express) { %>'express:dist', 'express-keepalive'<% } else { %>'connect:dist:keepalive'<% } %>]);
     }
     grunt.task.run([
       'build',
-      'concurrent:livereload'
+      <% if (express) { %>'concurrent:livereload'<% } else { %>'connect:livereload',
+      'watch'<% } %>
     ]);
   });<% if (angular) { %>
 

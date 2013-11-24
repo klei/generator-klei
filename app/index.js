@@ -99,7 +99,7 @@ KleiGenerator.prototype.ask = function ask() {
       message: 'Should a simple Todo list example be generated as well?',
       default: true,
       when: function (props) {
-        return props.types.indexOf('angular') > -1 || props.types.indexOf('express');
+        return props.types.indexOf('angular') > -1 || props.types.indexOf('express') > -1;
       }
     }
   ];
@@ -120,7 +120,11 @@ KleiGenerator.prototype.ask = function ask() {
 
 KleiGenerator.prototype.basicFiles = function basicFiles() {
   this.template('_package.json', 'package.json');
-  this.template('_Gruntfile.js', 'Gruntfile.js');
+  try {
+    this.template('_Gruntfile.js', 'Gruntfile.js');
+  } catch (e) {
+    require('fs').writeFileSync('grunt-error.js', e.source, 'utf8');
+  }
 
   this.mkdir('src');
 
