@@ -4,7 +4,8 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
   var pkg = require('./package'),
-      modulename = (pkg.klei || {}).name || pkg.title || pkg.name;
+      klei = require('./klei'),
+      modulename = klei.name || pkg.title || pkg.name;
 
   grunt.initConfig({
     pkg: pkg,
@@ -106,7 +107,7 @@ module.exports = function (grunt) {
       },<% } %><% if (angular) { %>
       templates: {
         files: ['<%%= dirs.app %>/**/*.html', '!<%%= dirs.app %>/<%%= modulename %>.html'],
-        tasks: ['html2js', 'injector:app']
+        tasks: ['html2js:app', 'injector:app']
       },
       index: {
         files: ['<%%= dirs.app %>/<%%= modulename %>.html'],
@@ -203,6 +204,30 @@ module.exports = function (grunt) {
     },<% } %>
 
     <% if (angular) { %>/**
+     * Minify HTML templates for dist
+     */
+    htmlmin: {
+      dist: {
+        options: {
+          // removeCommentsFromCDATA: true,
+          collapseWhitespace: true,
+          removeEmptyAttributes: true,
+          collapseBooleanAttributes: true
+          // removeAttributeQuotes: true,
+          // removeRedundantAttributes: true,
+          // useShortDoctype: true,
+          // removeOptionalTags: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.app %>',
+          src: ['**/*.html', '!<%%= modulename %>.html'],
+          dest: '<%%= dirs.temp %>'
+        }]
+      }
+    },
+
+    /**
      * Compile AngularJS html templates to Javascript and inject into $templateCache
      */
     html2js: {
@@ -218,6 +243,24 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%%= dirs.app %>',
           src: ['**/*.html', '!<%%= modulename %>.html'],
+          dest: '<%%= dirs.temp %>',
+          rename: function () {
+            return '<%%= dirs.temp %>/<%%= modulename %>Templates.js';
+          }
+        }]
+      },
+      dist: {
+        options: {
+          module: '<%%= modulename %>Templates',
+          base: '<%%= dirs.temp %>',
+          rename: function (template) {
+            return '/' + modulename + '/' + template;
+          }
+        },
+        files: [{
+          expand: true,
+          cwd: '<%%= dirs.temp %>',
+          src: ['**/*.html'],
           dest: '<%%= dirs.temp %>',
           rename: function () {
             return '<%%= dirs.temp %>/<%%= modulename %>Templates.js';
@@ -255,7 +298,7 @@ module.exports = function (grunt) {
      */
     karma: {
       options: {
-        configFile: 'karma/karma.conf.js'
+        configFile: 'karma.conf.js'
       },
       unit: {
         background: true
@@ -295,7 +338,7 @@ module.exports = function (grunt) {
 
       <% if (angular) { %>karmaconf: {
         options: {
-          destFile: 'karma/karma.conf.js',
+          destFile: 'karma.conf.js',
           starttag: '/** injector **/',
           endtag: '/** endinjector **/',
           transform: function (file) { return '\'' + file.slice(1) + '\','; }
@@ -458,7 +501,7 @@ module.exports = function (grunt) {
 
   <% if (angular || stylus) { %>grunt.registerTask('build', [
     'clean'<% if (angular) { %>,
-    'html2js'<% } %><% if (stylus) { %>,
+    'html2js:app'<% } %><% if (stylus) { %>,
     'stylus:base'<% if (angular) { %>,
     'stylus:app'<% } %>,
     'csslint',
@@ -471,7 +514,8 @@ module.exports = function (grunt) {
 
   <% if (angular || stylus) { %>grunt.registerTask('dist', [
     'clean'<% if (angular) { %>,
-    'html2js',
+    'htmlmin:dist',
+    'html2js:dist',
     'concat:app'<% } %><% if (stylus) { %>,
     'stylus:base'<% if (angular) { %>,
     'stylus:app'<% } %>,

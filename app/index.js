@@ -106,6 +106,7 @@ KleiGenerator.prototype.ask = function ask() {
 
   this.prompt(prompts, function (props) {
     var checked = function (val) { return props.types.indexOf(val) > -1; };
+    this.types = props.types;
     this.angular = checked('angular');
     this.mongo = checked('mongo');
     this.express = checked('express');
@@ -120,6 +121,7 @@ KleiGenerator.prototype.ask = function ask() {
 
 KleiGenerator.prototype.basicFiles = function basicFiles() {
   this.template('_package.json', 'package.json');
+  this.template('_klei.json', 'klei.json');
   try {
     this.template('_Gruntfile.js', 'Gruntfile.js');
   } catch (e) {
@@ -179,8 +181,7 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
     this.template('app/_module.html', 'src/app/' + this.modulename + '.html');
     this.template('app/jshintrc', 'src/app/.jshintrc');
 
-    this.mkdir('karma');
-    this.copy('karma/karma.conf.js', 'karma/karma.conf.js');
+    this.copy('karma.conf.js', 'karma.conf.js');
 
     if (this.useexample) {
       this.mkdir('src/app/todo');

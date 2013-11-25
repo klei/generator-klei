@@ -45,8 +45,5 @@
     "karma-firefox-launcher": "~0.1.0",
     "karma-html2js-preprocessor": "~0.1.0",
     "karma": "~0.10.5"<% } %>
-  },
-  "klei": {
-    "name": "<%= modulename %>"
   }
 }

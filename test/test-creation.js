@@ -21,12 +21,13 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create dotfiles, Gruntfile.js and package.json', function (done) {
+  it('should create dotfiles, Gruntfile.js, klei.json and package.json', function (done) {
     var expected = [
       '.jshintrc',
       '.editorconfig',
       '.gitignore',
       'package.json',
+      'klei.json',
       'Gruntfile.js'
     ];
 
@@ -146,7 +147,7 @@ describe('klei generator', function () {
 
   it('should create a karma config if angular is chosen', function (done) {
     var expected = [
-      'karma/karma.conf.js'
+      'karma.conf.js'
     ];
 
     helpers.mockPrompt(klei, {
