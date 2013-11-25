@@ -1,8 +1,8 @@
 
 <h3>Todo</h3>
 <ul class="unstyled">
-  <li class="todo-item" ng-repeat="todo in todos" ng-class="{'todo-done': todo.done}">
-    <label><input type="checkbox" ng-click="check()" ng-model="todo.done"/> {{todo.label}}</label>
+  <li class="todo-item" ng-repeat="todo in todos" ng-class="{'todo-done': todo.isDone}">
+    <label><input type="checkbox" ng-click="check()" ng-model="todo.isDone"/> {{todo.label}}</label>
   </li>
   <li class="todo-item">
     <form ng-submit="add()">

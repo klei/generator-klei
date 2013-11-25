@@ -22,7 +22,7 @@ angular
     } %>
 
     $scope.add = function () {
-      var todo = {label: $scope.label, done: false};
+      var todo = {label: $scope.label, isDone: false};
       <% if (express) {
       %>$scope.posting = true;
       Todo.post(todo)
@@ -44,7 +44,7 @@ angular
     };
 
     $scope.check = function () {
-      this.todo.done = !this.todo.done;<% if (express) { %>
+      this.todo.isDone = !this.todo.isDone;<% if (express) { %>
       this.todo.put().catch(function (err) {
         $log.error(err);
       });<% } %>

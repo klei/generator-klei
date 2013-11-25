@@ -28,7 +28,7 @@ exports.update = function (req, res) {
   var todo = getById(req.params.id);
   if (todo) {
     todo.label = req.body.label || todo.label;
-    todo.done = !!req.body.done;
+    todo.isDone = !!req.body.isDone;
     res.send(todo);
   } else {
     res.send(404);

@@ -2,7 +2,7 @@
 /* global describe, it, beforeEach, inject, module, should */
 
 describe('TodoCtrl', function () {
-  var <% if (express) { %>todos = [{label: 'One', done: false}, {label: 'Two', done: true}],
+  var <% if (express) { %>todos = [{label: 'One', isDone: false}, {label: 'Two', isDone: true}],
       $httpBackend,<% } %>
       todoCtrl,
       scope;
@@ -28,7 +28,7 @@ describe('TodoCtrl', function () {
   });<% } %>
 
   it('should add new todos on add()', function () {
-    var todo = {label: 'A new todo'<% if (express) { %>, _id: 'abc123'<% } %>};
+    var todo = {label: 'A new todo'<% if (express) { %>, _id: 'abc123'<% } %>, isDone: false};
     todoCtrl();<% if (express) { %>
     $httpBackend.flush();
     $httpBackend.when('POST', '/api/todo').respond(todo);<% } %>
@@ -41,6 +41,6 @@ describe('TodoCtrl', function () {
     scope.todos.length.should.equal(<% if (express) { %>3<% } else { %>1<% } %>);<% if (express) { %>
     scope.todos[scope.todos.length - 1]._id.should.equal('abc123');<% } %>
     scope.todos[scope.todos.length - 1].label.should.equal(todo.label);
-    scope.todos[scope.todos.length - 1].done.should.equal(false);
+    scope.todos[scope.todos.length - 1].isDone.should.equal(false);
   });
 });
