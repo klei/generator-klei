@@ -1,46 +1,46 @@
-# generator-klei [![Build Status](https://secure.travis-ci.org/klei-dev/generator-klei.png?branch=master)](https://travis-ci.org/klei-dev/generator-klei)
+# Klei Generator [![Build Status](https://secure.travis-ci.org/klei-dev/generator-klei.png?branch=master)](https://travis-ci.org/klei-dev/generator-klei)
 
-A generator for [Yeoman](http://yeoman.io).
-
+> A Yeoman generator for generating awesome module or app boilerplates! MEAN-stack (all parts optional) with Grunt and Bower sweetness..
 
 ## Getting Started
 
-### What is Yeoman?
-
-Trick question. It's not a thing. It's this guy:
-
-![](http://i.imgur.com/JHaAlBJ.png)
-
-Basically, he wears a top hat, lives in your computer, and waits for you to tell him what kind of application you wish to create.
-
-Not every new computer comes with a Yeoman pre-installed. He lives in the [npm](https://npmjs.org) package repository. You only have to ask for him once, then he packs up and moves into your hard drive. *Make sure you clean up, he likes new and shiny things.*
+### Install Yeoman
 
 ```
 $ npm install -g yo
 ```
 
-### Yeoman Generators
-
-Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
-
-To install generator-klei from npm, run:
+### Install the Klei Generator
 
 ```
 $ npm install -g generator-klei
 ```
 
-Finally, initiate the generator:
+Do the magic:
 
 ```
 $ yo klei
 ```
 
-### Getting To Know Yeoman
+## What can the Klei Generator do?
 
-Yeoman has a heart of gold. He's a person with feelings and opinions, but he's very easy to work with. If you think he's too opinionated, he can be easily convinced.
+The Klei Generator asks you what type of module you want to build, then you pick the parts you want from:
 
-If you'd like to get to know Yeoman better and meet some of his friends, [Grunt](http://gruntjs.com) and [Bower](http://bower.io), check out the complete [Getting Started Guide](https://github.com/yeoman/yeoman/wiki/Getting-Started).
+* REST API's - using [Express.js](http://expressjs.com)
+* MongoDB - using [Mongoose](http://mongoosejs.com)
+* Client - using [AngularJS](http://angularjs.org)
+* Stylesheets - using [Stylus](http://learnboost.github.io/stylus/)
 
+### What you'll get:**
+
+* A scalable directory structure (Todo list example included)
+* A fully configured Gruntfile with livereload, linting, concatenation, minification etc.
+* Automounting of API routes using [exctrl](https://npmjs.org/package/exctrl)
+* No more editing of your html layout when adding scripts and stylesheets to your project, thanks to [grunt-injector](https://npmjs.org/package/grunt-injector)
+* Frontend unit testing with [Karma](http://karma-runner.github.io/), [Mocha](http://visionmedia.github.io/mocha/) and [Chai](http://chaijs.com/)
+* and more.. This is just the first version, there's more to come!
+
+**Try it out!**
 
 ## License
 
