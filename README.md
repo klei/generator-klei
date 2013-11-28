@@ -31,7 +31,7 @@ The Klei Generator asks you what type of module you want to build, then you pick
 * Client - using [AngularJS](http://angularjs.org)
 * Stylesheets - using [Stylus](http://learnboost.github.io/stylus/)
 
-### What you'll get:**
+### What you'll get:
 
 * A scalable directory structure (Todo list example included)
 * A fully configured Gruntfile with livereload, linting, concatenation, minification etc.
