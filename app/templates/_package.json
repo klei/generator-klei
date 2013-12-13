@@ -2,18 +2,18 @@
   "name": "km-<%= modulenameDashed %>",
   "version": "0.1.0",
   "private": true,
-  "scripts": {<% if (express) { %>
-    "start": "node ."
-  <% } %>},
-  <% if (express) { %>"main": "index.js",
-  <% } %>"keywords": [
+  "scripts": {
+    "start": "grunt serve",
+    "test": "grunt test"
+  },
+  "keywords": [
     "klei-module"
   ],
   "dependencies": {
-    <% if (mongo) { %>"mongoose": "~3.8.0",
+    <% if (mongo) { %>"mongoose": "~3.8.1",
     "mongoload": "~0.1.0"<% } %><% if (mongo && express) { %>,
-    <% } %><% if (express) { %>"express": "~3.4.4",
-    "exctrl": ">=0.2"<% } %>
+    <% } %><% if (express) { %>"express": "~3.4.7",
+    "exctrl": "0.2.1"<% } %>
   },
   "devDependencies": {
     "load-grunt-tasks": "~0.2.0",
@@ -24,6 +24,8 @@
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-newer": "~0.6.0",
     "mocha": "~1.15.1",
+    "chai": "~1.8.1",
+    "grunt-mocha-cli": "~1.4.0",
     "jshint-stylish": "~0.1.4"<% if (angular || stylus) { %>,
     "grunt-injector": "~0.3.0",
     <% if (express) { %>"grunt-express": "~1.2.1"<% } else { %>"grunt-contrib-connect": "~0.5.0"<% } %>,

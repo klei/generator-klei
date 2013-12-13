@@ -308,6 +308,23 @@ module.exports = function (grunt) {
       }
     },<% } %>
 
+    /**
+     * Mocha Cli configuration
+     */
+    mochacli: {
+      options: {
+        reporter: 'spec',
+        ui: 'bdd'
+      },
+      api_unit: ['<%%= dirs.api %>/**/*.spec.js'],
+      api_continuous: {
+        options: {
+          bail: true,
+        },
+        src: ['<%%= dirs.api %>/**/*.spec.js']
+      }
+    },
+
     <% if (angular || stylus) { %>/**
      * The `injector` task injects all scripts/stylesheets into the `index.html` file
      */
@@ -495,9 +512,9 @@ module.exports = function (grunt) {
       <% if (express) { %>'concurrent:livereload'<% } else { %>'connect:livereload',
       'watch'<% } %>
     ]);
-  });<% if (angular) { %>
+  });
 
-  grunt.registerTask('test', ['injector:karmaconf', 'karma:continuous']);<% } %>
+  grunt.registerTask('test', [<% if (angular) { %>'build', 'injector:karmaconf', 'karma:continuous', <% } %>'mochacli:api_continuous']);
 
   <% if (angular || stylus) { %>grunt.registerTask('build', [
     'clean'<% if (angular) { %>,
