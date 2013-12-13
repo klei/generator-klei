@@ -2,11 +2,7 @@
 var util = require('util'),
     path = require('path'),
     yeoman = require('yeoman-generator'),
-    chalk = require('chalk'),
-    $ok = chalk.green,
-    $info = chalk.yellow,
-    $comment = chalk.grey;
-
+    c = require('../lib/common');
 
 var KleiGenerator = module.exports = function KleiGenerator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments);
@@ -21,13 +17,7 @@ var KleiGenerator = module.exports = function KleiGenerator(args, options, confi
 
   this.pkg = require('../package.json');
 
-  this.klei = '\n' +
-            $ok('  _    _      ') + $info('_') + ' \n' +
-            $ok(' | |  | |    ') + $info('(_)\n') +
-            $ok(' | | _| | ___ _ \n') +
-            $ok(' | |/ / |/ _ \\ |\n') +
-            $ok(' |   <| |  __/ |\n') +
-            $ok(' |_|\\_\\_|\\___|_|') + $comment(' v.' + this.pkg.version) + '\n';
+  console.log(c.klei);
 
 };
 
@@ -35,8 +25,6 @@ util.inherits(KleiGenerator, yeoman.generators.Base);
 
 KleiGenerator.prototype.askForModulename = function askForModulename() {
   var cb = this.async();
-
-  console.log(this.klei);
 
   var prompts = [{
     name: 'modulename',
@@ -60,26 +48,26 @@ KleiGenerator.prototype.ask = function ask() {
     {
       type: 'checkbox',
       name: 'types',
-      message: 'What pieces do you want to build your module with? ' + $comment('(uncheck all for a pure Node.js module)'),
+      message: 'What pieces do you want to build your module with? ' + c.$comment('(uncheck all for a pure Node.js module)'),
       choices: [
         {
           value: 'express',
-          name: 'REST API ' + $comment('(using ' + $info('express.js') + ')'),
+          name: 'REST API ' + c.$comment('(using ' + c.$info('express.js') + ')'),
           checked: true
         },
         {
           value: 'mongo',
-          name: 'MongoDB ' + $comment('(using ' + $info('Mongoose') + ')'),
+          name: 'MongoDB ' + c.$comment('(using ' + c.$info('Mongoose') + ')'),
           checked: true
         },
         {
           value: 'angular',
-          name: 'Client APP ' + $comment('(using ' + $info('AngularJS') + ')'),
+          name: 'Client APP ' + c.$comment('(using ' + c.$info('AngularJS') + ')'),
           checked: true
         },
         {
           value: 'stylus',
-          name: 'Stylesheets ' + $comment('(using ' + $info('Stylus') + ')'),
+          name: 'Stylesheets ' + c.$comment('(using ' + c.$info('Stylus') + ')'),
           checked: true
         }
       ]
@@ -87,7 +75,7 @@ KleiGenerator.prototype.ask = function ask() {
     {
       type: 'confirm',
       name: 'addconfig',
-      message: 'Should a config dir be added to your module as well? ' + $comment('(for environment specific settings and such)'),
+      message: 'Should a config dir be added to your module as well? ' + c.$comment('(for environment specific settings and such)'),
       default: true,
       when: function (props) {
         return !props.types.length;

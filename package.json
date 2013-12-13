@@ -24,7 +24,7 @@
     "url": "git://github.com/klei-dev/generator-klei.git"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "NODE_ENV=test node_modules/.bin/mocha"
   },
   "dependencies": {
     "yeoman-generator": "~0.14.2",

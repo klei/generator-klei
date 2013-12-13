@@ -9,3 +9,10 @@ describe('klei generator', function () {
     assert(app !== undefined);
   });
 });
+
+describe('klei:api generator', function () {
+  it('can be imported without blowing up', function () {
+    var api = require('../api');
+    assert(api !== undefined);
+  });
+});
