@@ -1,7 +1,13 @@
 generator-klei changelog
 =========================
 
-## v.02
+## v.0.3
+
+### Release v.0.3.0
+
+* Adding klei:api subgenerator for generating new API's
+
+## v.0.2
 
 ### Release v.0.2.0
 
