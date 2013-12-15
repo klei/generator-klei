@@ -13,7 +13,7 @@
     <% if (mongo) { %>"mongoose": "~3.8.1",
     "mongoload": "~0.1.0"<% } %><% if (mongo && express) { %>,
     <% } %><% if (express) { %>"express": "~3.4.7",
-    "exctrl": "0.2.1"<% } %>
+    "exctrl": "~0.2.1"<% } %>
   },
   "devDependencies": {
     "load-grunt-tasks": "~0.2.0",
@@ -27,7 +27,7 @@
     "chai": "~1.8.1",
     "grunt-mocha-cli": "~1.4.0",
     "jshint-stylish": "~0.1.4"<% if (angular || stylus) { %>,
-    "grunt-injector": "~0.3.0",
+    "grunt-injector": "~0.3.1",
     <% if (express) { %>"grunt-express": "~1.2.1"<% } else { %>"grunt-contrib-connect": "~0.5.0"<% } %>,
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-clean": "~0.5.0"<% } %><% if (stylus) { %>,
@@ -39,7 +39,7 @@
     "grunt-html2js": "~0.2.3",
     "grunt-ngmin": "~0.0.3",
     "grunt-karma": "~0.6.2",
-    "karma-chai": "0.0.2",
+    "karma-chai": "~0.0.2",
     "karma-mocha": "~0.1.1",
     "karma-phantomjs-launcher": "~0.1.1",
     "karma-script-launcher": "~0.1.0",
