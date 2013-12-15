@@ -8,7 +8,11 @@ var KleiGenerator = module.exports = function KleiGenerator(args, options, confi
   yeoman.generators.Base.apply(this, arguments);
 
   this.argument('modulename', { type: String, required: false });
-  this.modulename = this.modulename || path.basename(process.cwd());
+  try {
+    this.modulename = require(path.join(process.cwd(), 'klei.json')).name;
+  } catch (e) {
+    this.modulename = this.modulename || path.basename(process.cwd());
+  }
   this.modulename = this._.camelize(this._.slugify(this._.humanize(this.modulename)));
 
   this.on('end', function () {
