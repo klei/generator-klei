@@ -37,7 +37,7 @@ $ yo klei
 ```bash
 $ grunt serve
 ```
-> **Don't forget that your mongodb server should already be running!**
+> **Don't forget that your mongodb server should already be running!** (if you chose MongoDB in the generator)
 
 ## What can the Klei Generator do?
 
