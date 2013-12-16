@@ -26,11 +26,18 @@ $ npm install -g yo
 $ npm install -g generator-klei
 ```
 
-Do the magic:
+### Do the magic:
 
 ```bash
 $ yo klei
 ```
+
+### Run the app:
+
+```bash
+$ grunt serve
+```
+> **Don't forget that your mongodb server should already be running!**
 
 ## What can the Klei Generator do?
 
