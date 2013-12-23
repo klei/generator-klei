@@ -33,7 +33,13 @@ KleiGenerator.prototype.askForModulename = function askForModulename() {
   var prompts = [{
     name: 'modulename',
     message: 'What do you want to name your module?',
-    default: this.modulename
+    default: this.modulename,
+    validate: function (val) {
+      if (!val || !val.length) {
+        return 'Provide a name!'
+      }
+      return true;
+    }
   }];
 
   this.prompt(prompts, function (props) {
