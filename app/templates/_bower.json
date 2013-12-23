@@ -17,11 +17,14 @@
     "tests"
   ],
   "dependencies": {
-    <% if (angular) { %>"angular": "~1.2.4",
-    "angular-route": "~1.2.4"<% if (express) { %>,
-    "restangular": "~1.2.0"<% } %><% } %>
+    <% if (angular) { %>"angular": "~1.2.6",
+    "angular-route": "~1.2.6"<% if (express) { %>,
+    "restangular": "~1.2.2"<% } %><% } %>
   },
   "devDependencies": {
-    <% if (angular) { %>"angular-mocks": "~1.2.4"<% } %>
+    <% if (angular) { %>"angular-mocks": "~1.2.6"<% } %>
+  },
+  "resolutions": {
+    "angular": "~1.2.6"
   }
 }
