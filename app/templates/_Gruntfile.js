@@ -1,4 +1,4 @@
-
+/* jshint camelcase:false */
 module.exports = function (grunt) {
   // Loading all tasks:
   require('load-grunt-tasks')(grunt);
