@@ -48,7 +48,8 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      temp: '<%%= dirs.temp %>'
+      temp: '<%%= dirs.temp %>',
+      temp_css: '<%%= dirs.temp %>/css'
     },<% } %>
 
     /**
@@ -98,8 +99,18 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:base'<% if (express) { %>, 'newer:jshint:api'<% } %>]
       },<% } %><% if (stylus) { %>
       styles: {
+        options: {
+          event: ['added', 'changed']
+        },
         files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
         tasks: ['newer:stylus', 'newer:csslint', 'injector:app', 'injector:styleguide']
+      },
+      deleted_styles: {
+        options: {
+          event: 'deleted'
+        },
+        files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
+        tasks: ['clean:temp_css', 'stylus', 'csslint', 'injector:app', 'injector:styleguide']
       },
       styleguide: {
         files: ['<%%= dirs.styles %>/styleguide.html'],
