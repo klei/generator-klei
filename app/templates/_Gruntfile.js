@@ -117,7 +117,7 @@ module.exports = function (grunt) {
         tasks: ['copy:styleguide']
       },<% } %><% if (angular) { %>
       templates: {
-        files: ['<%%= dirs.app %>/**/*.html', '!<%%= dirs.app %>/<%%= modulename %>.html'],
+        files: ['<%%= dirs.app %>/*/{,*/}*.html'],
         tasks: ['html2js:app', 'injector:app']
       },
       index: {
