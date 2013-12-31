@@ -525,7 +525,7 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [<% if (angular) { %>'build', 'injector:karmaconf', 'karma:continuous', <% } %>'mochacli:api_continuous']);
+  grunt.registerTask('test', [<% if (angular) { %>'html2js:app', 'injector:karmaconf', 'karma:continuous', <% } %>'mochacli:api_continuous']);
 
   <% if (angular || stylus) { %>grunt.registerTask('build', [
     'clean'<% if (angular) { %>,
