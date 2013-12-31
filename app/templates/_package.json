@@ -27,7 +27,7 @@
     "chai": "~1.8.1",
     "grunt-mocha-cli": "~1.4.0",
     "jshint-stylish": "~0.1.4"<% if (angular || stylus) { %>,
-    "grunt-injector": "~0.3.1",
+    "grunt-injector": "~0.5.0",
     <% if (express) { %>"grunt-express": "~1.2.1"<% } else { %>"grunt-contrib-connect": "~0.5.0"<% } %>,
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-clean": "~0.5.0"<% } %><% if (stylus) { %>,

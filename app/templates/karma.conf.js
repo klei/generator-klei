@@ -12,7 +12,7 @@ module.exports = function ( karma ) {
      * This is the list of file patterns to load into the browser during testing.
      */
     files: [
-      /** injector **/
+      /** injector:js **/
       /** endinjector **/
     ],
 

@@ -367,7 +367,7 @@ module.exports = function (grunt) {
       <% if (angular) { %>karmaconf: {
         options: {
           destFile: 'karma.conf.js',
-          starttag: '/** injector **/',
+          starttag: '/** injector:{{ext}} **/',
           endtag: '/** endinjector **/',
           transform: function (file) { return '\'' + file.slice(1) + '\','; }
         },
