@@ -1,6 +1,21 @@
 generator-klei changelog
 =========================
 
+## v.0.4
+
+### Release v.0.4.0
+
+* Switching to [grunt-express-server](https://github.com/ericclemmons/grunt-express-server) from [grunt-express](https://github.com/blai/grunt-express), because the latter was buggy and `src/index.js` can now be run without `grunt` (Fixes [#4](https://github.com/klei-dev/generator-klei/issues/4))
+* Concats and minifies 3rd party libraries as well, to `dist/vendor.min.js` and `dist/vendor.min.css` respectively
+* `dist` folder is not used (and cleared) in development mode anymore
+* Assures that prompt defaults are really set (Hopefully fixes [#5](https://github.com/klei-dev/generator-klei/issues/5))
+* Minimizing build time before running Karma tests
+* Making sure built stylus files are removed when their sources are removed
+* Making Jshint happy with the Gruntfile
+* Making sure the watch task is triggered when adding new html templates
+* Making sure any css-files from Bower components are not injected into karma.conf.js
+* Plus other small fixes...
+
 ## v.0.3
 
 ### Release v.0.3.0
