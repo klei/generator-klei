@@ -47,6 +47,35 @@ $ grunt serve
 ```
 > **Don't forget that your mongodb server should already be running!** (if you chose MongoDB in the generator)
 
+### Run in production
+
+The generator doesn't yet generate a fully production ready configuration following all best practices, but at least you must do the following steps:
+
+#### Without REST API's
+
+Build everything and run the static resource server (a `connect` server) with:
+
+```bash
+$ grunt serve:dist
+```
+
+#### With REST API's
+
+First build everything for distribution:
+
+```bash
+$ grunt dist
+```
+
+Then run the server:
+
+```bash
+$ NODE_ENV=production node src/index.js
+```
+
+**N.B.** You should be using something like [Forever](https://npmjs.org/package/forever) or similar to keep the server up and running.
+
+
 ## What can the Klei Generator do?
 
 The Klei Generator asks you what type of module you want to build, then you pick the parts you want from:
