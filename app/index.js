@@ -163,8 +163,6 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
     if (this.useexample) {
       this.copy('models/Todo.js', 'src/models/Todo.js');
     }
-  } else if (!this.choseType) {
-
   }
 };
 
