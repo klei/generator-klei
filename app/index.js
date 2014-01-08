@@ -128,11 +128,7 @@ KleiGenerator.prototype.ask = function ask() {
 KleiGenerator.prototype.basicFiles = function basicFiles() {
   this.template('_package.json', 'package.json');
   this.template('_klei.json', 'klei.json');
-  try {
-    this.template('_Gruntfile.js', 'Gruntfile.js');
-  } catch (e) {
-    require('fs').writeFileSync('grunt-error.js', e.source, 'utf8');
-  }
+  this.template('_Gruntfile.js', 'Gruntfile.js');
 
   this.mkdir('src');
 
