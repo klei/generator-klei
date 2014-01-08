@@ -26,6 +26,14 @@ $ npm install -g yo
 $ npm install -g generator-klei
 ```
 
+### Install Bower
+
+This is only needed if "Client APP" or "Stylesheets" are to be chosen in the generator.
+
+```bash
+$ npm install -g bower
+```
+
 ### Do the magic:
 
 ```bash
