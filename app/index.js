@@ -132,11 +132,12 @@ KleiGenerator.prototype.basicFiles = function basicFiles() {
 
   this.mkdir('src');
 
-  if (this.addconfig || this.express || this.mongo) {
+  if (this.addconfig) {
     this.mkdir('src/config');
     this.copy('config/index.js', 'src/config/index.js');
     this.copy('config/env.js', 'src/config/env.js');
     this.template('config/_development.json', 'src/config/development.json');
+    this.template('config/_development.json', 'src/config/production.json');
   }
 };
 
