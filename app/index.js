@@ -110,8 +110,16 @@ KleiGenerator.prototype.ask = function ask() {
     this.express = checked('express');
     this.stylus = checked('stylus');
     this.choseType = !!props.types.length;
-    this.addconfig = props.addconfig;
-    this.useexample = props.useexample;
+    if (typeof props.addconfig === 'undefined') {
+      this.addconfig = checked('mongo') || checked('express');
+    } else {
+      this.addconfig = props.addconfig;
+    }
+    if (typeof props.useexample === 'undefined') {
+      this.useexample = checked('angular') || checked('express');
+    } else {
+      this.useexample = props.useexample;
+    }
 
     cb();
   }.bind(this));
