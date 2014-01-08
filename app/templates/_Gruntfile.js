@@ -4,24 +4,53 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
   var pkg = require('./package'),
-      klei = require('./klei'),
+      klei = require('./klei')<% if (angular) { %>,
+      path = require('path')<% } %>,
       modulename = klei.name || pkg.title || pkg.name;
+  <% if (angular) { %>
+  /**
+   * HTML Minify Options
+   */
+  var htmlMinOptions = {
+    removeComments: true,
+    // removeCommentsFromCDATA: true,
+    collapseWhitespace: true,
+    removeEmptyAttributes: false,
+    collapseBooleanAttributes: true,
+    // removeAttributeQuotes: true,
+    removeRedundantAttributes: true
+    // useShortDoctype: true,
+    // removeOptionalTags: true
+  };<% } %>
 
   grunt.initConfig({
     pkg: pkg,
     modulename: modulename,
-
+    <% if (angular) { %>
+    /**
+     * Manually added vendor files
+     *
+     * Put paths for libraries not installed via Bower,
+     * or those without a `main` section in their bower.json here.
+     * E.g. angular-i18n files.
+     *
+     * (Add both stylesheets and javascripts)
+     */
+    vendorFiles: [
+      // e.g. "bower_components/angular-i18n/angular-locale_sv-se.js"
+    ],
+    <% } %>
     /**
      * Source dirs
      */
     dirs: {
-      src: 'src'<% if (angular) { %>,
+      src: 'src'<% if (addconfig) { %>,
+      config: 'src/config'<% } %><% if (angular) { %>,
       app: 'src/app'<% } %><% if (express) { %>,
       api: 'src/api'<% } %><% if (stylus) { %>,
       styles: 'src/styles'<% } %><% if (angular || stylus) { %>,
       dist: 'dist',
-      temp: '.tmp'<% } %><% if (addconfig) { %>,
-      config: 'src/config'<% } %>
+      temp: '.tmp'<% } %>
     },
 
     <% if (angular || stylus) { %>
@@ -40,37 +69,35 @@ module.exports = function (grunt) {
      * Clean up
      */
     clean: {
-      dist: {
-        files: [{
-          src: [
-            '<%%= dirs.temp %>',
-            '<%%= dirs.dist %>'
-          ]
-        }]
-      },
-      temp: '<%%= dirs.temp %>',
-      temp_css: '<%%= dirs.temp %>/css'
+      all: ['<%%= dirs.dist %>', '<%%= dirs.temp %>'],
+      dist: '<%%= dirs.dist %>',
+      temp: '<%%= dirs.temp %>'<% if (stylus) { %>,
+      temp_css: '<%%= dirs.temp %>/css'<% } %>
     },<% } %>
 
     /**
      * Server
      */
-    <% if (express) { %>'express'<% } else { %>'connect'<% } %>: {
+    <% if (express) { %>express: {
       options: {
         port: 1337,
-        open: false,
-        livereload: false,
-        // change this to '0.0.0.0' to access the server from outside
+        script: '<%%= dirs.src %>/index.js'
+      },
+      dev: {
+        options: {
+          node_env: 'development'
+        }
+      }
+    },<% } else if (angular || stylus) { %>connect: {
+      options: {
+        port: 1337,
         hostname: '*'
       },
       livereload: {
         options: {
-          livereload: 35729<% if (express) { %>,
-          serverreload: true,
-          showStack: true,
-          server: '<%%= dirs.src %>/index.js'<% } else { %>,
-          open: true<% } %>,
-          base<% if (express) { %>s<% } %>: [
+          livereload: true,
+          open: true,
+          base: [
             'bower_components',
             '<%%= dirs.temp %>',
             '<%%= dirs.app %>',
@@ -79,38 +106,47 @@ module.exports = function (grunt) {
         }
       },
       dist: {
-        options: {<% if (express) { %>
-          open: true,
-          server: '<%%= dirs.src %>/index.js',<% } %>
-          bases: [
-            'bower_components',
+        options: {
+          keepalive: true,
+          base: [
             '<%%= dirs.dist %>'
           ]
         }
       }
-    },
+    },<% } %>
 
     /**
      * Watch files and do stuff
      */
     watch: {<% if (addconfig || express || !choseType) { %>
       base: {
-        files: [<% if (express) { %>'<%%= dirs.api %>/**/*.js'<% } %><% if (!choseType) { %>, '<%%= dirs.src %>/**/*.js'<% } %><% if (addconfig) { %>, '<%%= dirs.config %>/*.js', '<%%= dirs.config %>/*.json'<% } %>],
+        files: [
+          <% if (express) { %>'<%%= dirs.api %>/**/*.js'<% } %><% if (!choseType) { %>,
+          '<%%= dirs.src %>/**/*.js'<% } %><% if (addconfig) { %>,
+          '<%%= dirs.config %>/*.{js,json}'<% } %>
+        ],
         tasks: ['newer:jshint:base'<% if (express) { %>, 'newer:jshint:api'<% } %>]
+      },<% } %><% if (express) { %>
+      backend: {
+        options: {
+          spawn: false
+        },
+        files: ['<%%= dirs.src %>/index.js', '<%%= dirs.api %>/**/*.js', '<%%= dirs.config %>/*.{js,json}'],
+        tasks: ['express:dev']
       },<% } %><% if (stylus) { %>
       styles: {
         options: {
           event: ['added', 'changed']
         },
         files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
-        tasks: ['newer:stylus', 'newer:csslint', 'injector:app', 'injector:styleguide']
+        tasks: ['newer:stylus', 'newer:csslint', <% if (angular) { %>'injector:app', <% } %>'injector:styleguide']
       },
       deleted_styles: {
         options: {
           event: 'deleted'
         },
         files: ['<%%= dirs.styles %>/**/*.styl'<% if (angular) { %>, '<%%= dirs.app %>/**/*.styl'<% } %>],
-        tasks: ['clean:temp_css', 'stylus', 'csslint', 'injector:app', 'injector:styleguide']
+        tasks: ['clean:temp_css', 'stylus', 'csslint', <% if (angular) { %>'injector:app', <% } %>'injector:styleguide']
       },
       styleguide: {
         files: ['<%%= dirs.styles %>/styleguide.html'],
@@ -122,38 +158,26 @@ module.exports = function (grunt) {
       },
       index: {
         files: ['<%%= dirs.app %>/<%%= modulename %>.html'],
-        tasks: ['copy:index']
+        tasks: ['injector:app', 'copy:index']
       },
       app: {
         files: ['<%%= dirs.app %>/**/*.js', '!<%%= dirs.app %>/**/*.spec.js'],
         tasks: ['injector:app', 'newer:jshint:app']
-      },<% } %><% if ((angular || stylus) && !express) { %>
+      },<% } %><% if (angular || stylus) { %>
       livereload: {
         options: {
-          livereload: 35729
+          livereload: true
         },
         files: [
-          <% if (angular) { %>'<%%= dirs.dist %>/index.html',
+          '<%%= dirs.temp %>/index.html'<% if (angular) { %>,
           '<%%= dirs.app %>/**/*.js',
-          '<%%= dirs.temp %>/*.js',<% } %><% if (stylus) { %>
-          '<%%= dirs.dist %>/styleguide.html',
-          '<%%= dirs.temp %>/**/*.css'<% } %>
+          '<%%= dirs.temp %>/*.js'<% } %><% if (angular && stylus) { %>,
+          '<%%= dirs.temp %>/styleguide.html'<% } %><% if (stylus) { %>,
+          '<%%= dirs.temp %>/css/**/*.css'<% } %><% if (angular) { %>,
+          '!<%%= dirs.app %>/**/*.spec.js'<% } %>
         ]
       }<% } %>
     },
-
-    <% if (express) { %>
-    concurrent: {
-      livereload: {
-        options: {
-          logConcurrentOutput: true
-        },
-        tasks: [
-          'watch',
-          'express:livereload'
-        ]
-      }
-    },<% } %>
 
     <% if (stylus) { %>
     /**
@@ -204,12 +228,17 @@ module.exports = function (grunt) {
      * Minify CSS
      */
     cssmin: {
-      options: {
-        banner: '<%%= meta.banner %>'
-      },
       dist: {
+        options: {
+          banner: '<%%= meta.banner %>'
+        },
         files: {
           '<%%= dirs.dist %>/<%%= modulename %>.min.css': [ '<%%= dirs.dist %>/<%%= modulename %>.css' ]
+        }
+      },
+      vendors: {
+        files: {
+          '<%%= dirs.dist %>/vendors.min.css': [ '<%%= dirs.dist %>/vendors.css' ]
         }
       }
     },<% } %>
@@ -219,22 +248,10 @@ module.exports = function (grunt) {
      */
     htmlmin: {
       dist: {
-        options: {
-          // removeCommentsFromCDATA: true,
-          collapseWhitespace: true,
-          removeEmptyAttributes: true,
-          collapseBooleanAttributes: true
-          // removeAttributeQuotes: true,
-          // removeRedundantAttributes: true,
-          // useShortDoctype: true,
-          // removeOptionalTags: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%%= dirs.app %>',
-          src: ['**/*.html', '!<%%= modulename %>.html'],
-          dest: '<%%= dirs.temp %>'
-        }]
+        options: htmlMinOptions,
+        files: {
+          '<%%= dirs.dist %>/index.html': '<%%= dirs.temp %>/index.html'
+        }
       }
     },
 
@@ -242,14 +259,14 @@ module.exports = function (grunt) {
      * Compile AngularJS html templates to Javascript and inject into $templateCache
      */
     html2js: {
+      options: {
+        module: '<%%= modulename %>Templates',
+        base: '<%%= dirs.app %>',
+        rename: function (template) {
+          return '/' + modulename + '/' + template;
+        }
+      },
       app: {
-        options: {
-          module: '<%%= modulename %>Templates',
-          base: '<%%= dirs.app %>',
-          rename: function (template) {
-            return '/' + modulename + '/' + template;
-          }
-        },
         files: [{
           expand: true,
           cwd: '<%%= dirs.app %>',
@@ -262,16 +279,12 @@ module.exports = function (grunt) {
       },
       dist: {
         options: {
-          module: '<%%= modulename %>Templates',
-          base: '<%%= dirs.temp %>',
-          rename: function (template) {
-            return '/' + modulename + '/' + template;
-          }
+          htmlmin: htmlMinOptions
         },
         files: [{
           expand: true,
-          cwd: '<%%= dirs.temp %>',
-          src: ['**/*.html'],
+          cwd: '<%%= dirs.app %>',
+          src: ['**/*.html', '!<%%= modulename %>.html'],
           dest: '<%%= dirs.temp %>',
           rename: function () {
             return '<%%= dirs.temp %>/<%%= modulename %>Templates.js';
@@ -294,12 +307,17 @@ module.exports = function (grunt) {
      * Minify Javascripts
      */
     uglify: {
-      options: {
-        banner: '<%%= meta.banner %>'
-      },
       dist: {
+        options: {
+          banner: '<%%= meta.banner %>'
+        },
         files: {
           '<%%= dirs.dist %>/<%%= modulename %>.min.js': [ '<%%= dirs.dist %>/<%%= modulename %>.annotated.js' ]
+        }
+      },
+      vendors: {
+        files: {
+          '<%%= dirs.dist %>/vendors.min.js': [ '<%%= dirs.dist %>/vendors.js' ]
         }
       }
     },
@@ -318,7 +336,7 @@ module.exports = function (grunt) {
         singleRun: true
       }
     },<% } %>
-
+    <% if (express || !choseType) { %>
     /**
      * Mocha Cli configuration
      */
@@ -326,15 +344,15 @@ module.exports = function (grunt) {
       options: {
         reporter: 'spec',
         ui: 'bdd'
-      },
+      }<% if (express) { %>,
       api_unit: ['<%%= dirs.api %>/**/*.spec.js'],
       api_continuous: {
         options: {
           bail: true,
         },
         src: ['<%%= dirs.api %>/**/*.spec.js']
-      }
-    },
+      }<% } %>
+    },<% } %>
 
     <% if (angular || stylus) { %>/**
      * The `injector` task injects all scripts/stylesheets into the `index.html` file
@@ -345,6 +363,7 @@ module.exports = function (grunt) {
       },<% if (stylus) { %>
       styleguide: {
         options: {
+          ignorePath: ['bower_components', '<%%= dirs.app %>', '<%%= dirs.temp %>'],
           destFile: '<%%= dirs.styles %>/styleguide.html'
         },
         files: [
@@ -355,16 +374,12 @@ module.exports = function (grunt) {
             src: ['**/*.css']
           }
         ]
-      },
-      styleguideMin: {
-        options: {
-          min: true,
-          destFile: '<%%= dirs.styles %>/styleguide.html'
-        },
-        src: ['bower.json', '<%%= dirs.dist %>/<%%= modulename %>.min.css']
       },<% } %>
 
-      <% if (angular) { %>karmaconf: {
+      <% if (angular) { %>/**
+       * Inject application files and specs into karma config
+       */
+      karmaconf: {
         options: {
           destFile: 'karma.conf.js',
           starttag: '/** injector:{{ext}} **/',
@@ -377,6 +392,9 @@ module.exports = function (grunt) {
               'bower.json',
               'bower_components/angular-mocks/angular-mocks.js'
             ]
+          },
+          {
+            src: '<%%= vendorFiles %>'
           },
           {
             expand: true,
@@ -402,9 +420,11 @@ module.exports = function (grunt) {
        */
       app: {
         options: {
-          ignorePath: ['<%%= dirs.app %>', '<%%= dirs.temp %>']
+          ignorePath: ['bower_components', '<%%= dirs.app %>', '<%%= dirs.temp %>']
         },
         files: [
+          {src: ['bower.json']},
+          {src: '<%%= vendorFiles %>'},
           {
             expand: true,
             cwd: '<%%= dirs.app %>',
@@ -419,6 +439,25 @@ module.exports = function (grunt) {
       },
 
       /**
+       * Collect all vendor files (to build a single vendors.js and vendors.css respectively)
+       */
+      vendors: {
+        options: {
+          destFile: '<%%= dirs.temp %>/vendors.json',
+          starttag: '"{{ext}}": [',
+          endtag: ']',
+          templateString: '{\n  "js": [],\n  "css": []\n}',
+          transform: function (file, i, length) {
+            return '  "' + file.slice(1) + '"' + (i + 1 < length ? ',' : '');
+          }
+        },
+        files: [
+          {src: ['bower.json']},
+          {src: '<%%= vendorFiles %>'}
+        ]
+      },
+
+      /**
        * Use concatenated and minified sources for dist mode
        */
       dist: {
@@ -427,34 +466,22 @@ module.exports = function (grunt) {
           ignorePath: 'dist'
         },
         src: [
-          '<%%= dirs.dist %>/<%%= modulename %>.min.js',
-          '<%%= dirs.dist %>/<%%= modulename %>.min.css'
+          '<%%= dirs.dist %>/vendors.js',
+          '<%%= dirs.dist %>/vendors.css',
+          '<%%= dirs.dist %>/<%%= modulename %>.js',
+          '<%%= dirs.dist %>/<%%= modulename %>.css'
         ]
-      },<% } %>
-
-      bower: {
-        options: {
-          ignorePath: 'bower_components'
-        },
-        src: ['bower.json']
-      },
-      bowerMin: {
-        options: {
-          min: true,
-          ignorePath: 'bower_components'
-        },
-        src: ['bower.json']
-      }
+      }<% } %>
     },
 
     copy: {<% if (angular) { %>
       index: {
         src: '<%%= dirs.app %>/<%%= modulename %>.html',
-        dest: '<%%= dirs.dist %>/index.html'
+        dest: '<%%= dirs.temp %>/index.html'
       },<% } %><% if (stylus) { %>
       styleguide: {
         src: '<%%= dirs.styles %>/styleguide.html',
-        dest: '<%%= dirs.dist %>/styleguide.html'
+        dest: '<%%= dirs.temp %>/<% if (!angular) { %>index<% } else { %>styleguide<% } %>.html'
       }<% } %>
     },
 
@@ -474,10 +501,19 @@ module.exports = function (grunt) {
           '!<%%= dirs.app %>/**/*.spec.js'
         ],
         dest: '<%%= dirs.dist %>/<%%= modulename %>.js'
+      },
+      vendors: {
+        options: {
+          banner: ''
+        },
+        files: {
+          '<%%= dirs.dist %>/vendors.js': ['<%%= dirs.temp %>/vendors/*.js'],
+          '<%%= dirs.dist %>/vendors.css': ['<%%= dirs.temp %>/vendors/*.css']
+        }
       }<% } %><% if (stylus) { %>,
       styles: {
         src: [
-          '<%%= dirs.temp %>/**/*.css'
+          '<%%= dirs.temp %>/css/**/*.css'
         ],
         dest: '<%%= dirs.dist %>/<%%= modulename %>.css'
       }<% } %>
@@ -514,53 +550,85 @@ module.exports = function (grunt) {
     }
   });
 
+  <% if (angular || stylus) { %>
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['dist', <% if (express) { %>'express:dist', 'express-keepalive'<% } else { %>'connect:dist:keepalive'<% } %>]);
+      <% if (express) { %>grunt.fatal('`grunt serve:dist` is deprecated! Run server manually with `npm start` or preferably with Forever or a similar tool and point them to `src/index.js`.');
+      return false;<% } else { %>return grunt.task.run(['dist', 'connect:dist']);<% } %>
     }
     grunt.task.run([
       'build',
-      <% if (express) { %>'concurrent:livereload'<% } else { %>'connect:livereload',
-      'watch'<% } %>
+      <% if (express) { %>'express:dev'<% } else { %>'connect:livereload'<% } %>,
+      'watch'
     ]);
-  });
+  });<% } %>
 
-  grunt.registerTask('test', [<% if (angular) { %>'html2js:app', 'injector:karmaconf', 'karma:continuous', <% } %>'mochacli:api_continuous']);
+  <% if (angular || express) { %>grunt.registerTask('test', [<% if (angular) { %>
+    'jshint:app',
+    'html2js:app',
+    'injector:karmaconf',
+    'karma:continuous'<% } %><% if (angular && express) { %>,<% } %><% if (express) { %>
+    'jshint:api',
+    'mochacli:api_continuous'<% } %>
+  ]);<% } %>
 
   <% if (angular || stylus) { %>grunt.registerTask('build', [
-    'clean'<% if (angular) { %>,
+    'clean:temp'<% if (angular) { %>,
     'html2js:app'<% } %><% if (stylus) { %>,
     'stylus:base'<% if (angular) { %>,
     'stylus:app'<% } %>,
     'csslint',
     'injector:styleguide',
     'copy:styleguide'<% } %><% if (angular) { %>,
-    'injector:bower',
+    'jshint:app',
     'injector:app',
     'copy:index'<% } %>
-  ]);<% } %>
+  ]);
 
-  <% if (angular || stylus) { %>grunt.registerTask('dist', [
-    'clean'<% if (angular) { %>,
-    'htmlmin:dist',
+  grunt.registerTask('dist', [
+    'clean:all'<% if (angular) { %>,
+    'build_vendors',
     'html2js:dist',
     'concat:app'<% } %><% if (stylus) { %>,
     'stylus:base'<% if (angular) { %>,
     'stylus:app'<% } %>,
     'csslint',
     'concat:styles',
-    'cssmin',
-    'injector:styleguideMin',
-    'copy:styleguide'<% } %><% if (angular) { %>,
+    'cssmin'<% } %><% if (angular) { %>,
+    'jshint:app',
     'ngmin',
     'uglify',
-    'injector:bowerMin',
     'injector:dist',
-    'copy:index'<% } %>
+    'copy:index',
+    'htmlmin:dist'<% } %>
   ]);<% } %>
 
   grunt.registerTask('default', [
     'jshint'<% if (angular || stylus) { %>,
     'build'<% } %>
-  ]);
+  ]);<% if (angular) { %>
+
+  /**
+   * Vendor related tasks
+   */
+  grunt.registerTask('build_vendors', ['injector:vendors', 'copy_vendors', 'concat:vendors']);
+
+  grunt.registerTask('copy_vendors', function () {
+    grunt.task.requires('injector:vendors');
+
+    var vendors = grunt.file.readJSON(grunt.config('dirs.temp') + '/vendors.json');
+
+    if (!vendors) {
+      grunt.log.warn('No vendors found, nothing to do');
+      return false;
+    }
+
+    [].concat(vendors['js']  || [])
+      .concat(vendors['css'] || [])
+      .forEach(function (file, i) {
+        grunt.file.copy(file, grunt.config('dirs.temp') + '/vendors/' + ('000000' + i).slice(-7) + '_' + path.basename(file));
+      });
+
+    return true;
+  });<% } %>
 };

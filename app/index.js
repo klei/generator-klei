@@ -145,7 +145,11 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
   if (this.express || this.mongo) {
     this.template('_index.js', 'src/index.js');
   }
+  if (this.mongo) {
+    this.template('_models.js', 'src/models.js');
+  }
   if (this.express) {
+    this.template('_app.js', 'src/app.js');
     this.mkdir('src/api');
 
     if (this.useexample) {

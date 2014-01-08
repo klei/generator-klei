@@ -112,7 +112,8 @@ describe('klei generator', function () {
     var expected = [
       'src/config/index.js',
       'src/config/env.js',
-      'src/config/development.json'
+      'src/config/development.json',
+      'src/config/production.json'
     ];
 
     helpers.mockPrompt(klei, {
@@ -287,9 +288,10 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create an index file if mongo is chosen', function (done) {
+  it('should create an index and models file if mongo is chosen', function (done) {
     var expected = [
-      'src/index.js'
+      'src/index.js',
+      'src/models.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -302,9 +304,10 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create an index file if express is chosen', function (done) {
+  it('should create an index and app file if express is chosen', function (done) {
     var expected = [
-      'src/index.js'
+      'src/index.js',
+      'src/app.js'
     ];
 
     helpers.mockPrompt(klei, {

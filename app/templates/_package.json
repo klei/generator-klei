@@ -3,32 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "grunt serve",
+    "start": <% if (express) { %>"NODE_ENV=production node src/index.js"<% } else { %>"grunt serve:dist"<% } %>,
     "test": "grunt test"
   },
   "keywords": [
     "klei-module"
   ],
   "dependencies": {
-    <% if (mongo) { %>"mongoose": "~3.8.1",
+    <% if (mongo) { %>"mongoose": "~3.8.3",
     "mongoload": "~0.1.0"<% } %><% if (mongo && express) { %>,
     <% } %><% if (express) { %>"express": "~3.4.7",
+    "connect-livereload": "~0.3.1",
     "exctrl": "~0.2.1"<% } %>
   },
   "devDependencies": {
     "load-grunt-tasks": "~0.2.0",
     "grunt": "~0.4.2",
-    "grunt-concurrent": "~0.4.2",
-    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-contrib-jshint": "~0.8.0",
     "grunt-newer": "~0.6.0",
-    "mocha": "~1.15.1",
+    "mocha": "~1.16.2",
     "chai": "~1.8.1",
-    "grunt-mocha-cli": "~1.4.0",
+    "grunt-mocha-cli": "~1.5.0",
     "jshint-stylish": "~0.1.4"<% if (angular || stylus) { %>,
     "grunt-injector": "~0.5.0",
-    <% if (express) { %>"grunt-express": "~1.2.1"<% } else { %>"grunt-contrib-connect": "~0.5.0"<% } %>,
+    <% if (express) { %>"grunt-express-server": "~0.4.11"<% } else { %>"grunt-contrib-connect": "~0.5.0"<% } %>,
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-clean": "~0.5.0"<% } %><% if (stylus) { %>,
     "grunt-contrib-stylus": "~0.11.0",
