@@ -623,8 +623,8 @@ module.exports = function (grunt) {
       return false;
     }
 
-    [].concat(vendors['js']  || [])
-      .concat(vendors['css'] || [])
+    [].concat(vendors.js  || [])
+      .concat(vendors.css || [])
       .forEach(function (file, i) {
         grunt.file.copy(file, grunt.config('dirs.temp') + '/vendors/' + ('000000' + i).slice(-7) + '_' + path.basename(file));
       });

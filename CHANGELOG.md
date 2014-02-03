@@ -3,6 +3,10 @@ generator-klei changelog
 
 ## v.0.4
 
+### Hotfix v.0.4.1
+
+* Fix to make `grunt jshint:base` happy
+
 ### Release v.0.4.0
 
 * Switching to [grunt-express-server](https://github.com/ericclemmons/grunt-express-server) from [grunt-express](https://github.com/blai/grunt-express), because the latter was buggy and `src/index.js` can now be run without `grunt` (Fixes [#4](https://github.com/klei-dev/generator-klei/issues/4))
