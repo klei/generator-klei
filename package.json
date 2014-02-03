@@ -1,6 +1,6 @@
 {
   "name": "generator-klei",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A Yeoman generator for generating awesome module or app boilerplates! MEAN-stack (all parts optional) with scalability in mind and with Grunt and Bower sweetness..",
   "keywords": [
     "yeoman-generator",
@@ -40,7 +40,7 @@
     "yo": ">=1.0.0"
   },
   "engines": {
-    "node": ">=0.8.0",
+    "node": ">=0.10.0",
     "npm": ">=1.2.10"
   },
   "licenses": [
