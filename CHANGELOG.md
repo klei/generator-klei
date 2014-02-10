@@ -3,6 +3,10 @@ generator-klei changelog
 
 ## v.0.4
 
+### Hotfix v.0.4.3
+
+* Using `NODE_ENV=test` for mocha tests
+
 ### Hotfix v.0.4.2
 
 * Remove node engine `v.0.8` because `yeoman-generator` doesn't support it
