@@ -113,7 +113,8 @@ describe('klei generator', function () {
       'src/config/index.js',
       'src/config/env.js',
       'src/config/development.json',
-      'src/config/production.json'
+      'src/config/production.json',
+      'src/config/test.json'
     ];
 
     helpers.mockPrompt(klei, {

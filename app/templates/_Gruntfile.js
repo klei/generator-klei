@@ -343,7 +343,8 @@ module.exports = function (grunt) {
     mochacli: {
       options: {
         reporter: 'spec',
-        ui: 'bdd'
+        ui: 'bdd',
+        env: {NODE_ENV:'test'}
       }<% if (express) { %>,
       api_unit: ['<%%= dirs.api %>/**/*.spec.js'],
       api_continuous: {
