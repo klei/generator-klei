@@ -1,3 +1,0 @@
-{
-  <% if (mongo) { %>"db": "mongodb://localhost/<%= modulename %>"<% } %>
-}
