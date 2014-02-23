@@ -36,7 +36,7 @@ KleiGenerator.prototype.askForModulename = function askForModulename() {
     default: this.modulename,
     validate: function (val) {
       if (!val || !val.length) {
-        return 'Provide a name!'
+        return 'Provide a name!';
       }
       return true;
     }
