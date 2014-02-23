@@ -4,7 +4,7 @@ var path = require('path'),
     exctrl = require('exctrl');
 
 module.exports = function () {
-  var app = app = express();
+  var app = express();
 
   app.use(express.bodyParser());
   app.use(express.methodOverride());
