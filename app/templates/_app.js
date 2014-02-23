@@ -8,6 +8,7 @@ module.exports = function () {
 
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.compress());
 
   exctrl
     .bind(app)
