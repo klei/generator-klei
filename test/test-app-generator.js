@@ -21,14 +21,14 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create dotfiles, Gruntfile.js, klei.json and package.json', function (done) {
+  it('should create dotfiles, gulpfile.js, klei.json and package.json', function (done) {
     var expected = [
       '.jshintrc',
       '.editorconfig',
       '.gitignore',
       'package.json',
       'klei.json',
-      'Gruntfile.js'
+      'gulpfile.js'
     ];
 
     helpers.mockPrompt(klei, {
