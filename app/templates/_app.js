@@ -13,9 +13,9 @@ module.exports = function () {
   exctrl
     .bind(app)
     .load({
-      pattern: __dirname + '/api/**/*.controller.js',
+      pattern: __dirname + '/api/**/*-api.js',
       prefix: 'api',
-      nameRegExp: /([^\/\\]+).controller.js$/
+      nameRegExp: /([^\/\\]+)-api.js$/
     });
 
   app.configure('development', function () {
