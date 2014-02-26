@@ -21,9 +21,9 @@ describe('klei:api generator', function () {
     });
   });
 
-  it('should a controller with given name camelized in an api directory with same name', function (done) {
+  it('should a controller with given name dasherized in an api directory with same name', function (done) {
     var expected = [
-      'src/api/myNewApi/myNewApi.controller.js'
+      'src/api/my-new-api/my-new-api-api.js'
     ];
 
     helpers.mockPrompt(api, {
