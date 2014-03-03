@@ -128,7 +128,7 @@ KleiGenerator.prototype.ask = function ask() {
 KleiGenerator.prototype.basicFiles = function basicFiles() {
   this.template('_package.json', 'package.json');
   this.template('_klei.json', 'klei.json');
-  this.template('_Gruntfile.js', 'Gruntfile.js');
+  this.template('_gulpfile.js', 'gulpfile.js');
 
   this.mkdir('src');
 
