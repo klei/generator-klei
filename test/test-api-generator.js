@@ -21,9 +21,10 @@ describe('klei:api generator', function () {
     });
   });
 
-  it('should a controller with given name dasherized in an api directory with same name', function (done) {
+  it('should create a controller and test with given name dasherized in an api directory with same name', function (done) {
     var expected = [
-      'src/api/my-new-api/my-new-api-api.js'
+      'src/api/my-new-api/my-new-api-api.js',
+      'src/api/my-new-api/my-new-api-api_test.js',
     ];
 
     helpers.mockPrompt(api, {

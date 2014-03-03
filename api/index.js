@@ -72,6 +72,7 @@ ApiGenerator.prototype.ask = function ask() {
       this.camelModelName = modelCamel[0].toLowerCase() + modelCamel.slice(1);
       this.titleModelName = this._.classify(modelCamel);
     }
+    this.mongo = usesMongo();
 
     cb();
   }.bind(this));
@@ -84,4 +85,13 @@ ApiGenerator.prototype.files = function files() {
   } else {
     this.template('_name-no-model-api.js', 'src/api/' + this.name + '/' + this.name + '-api.js');
   }
+  this.template('_name-api_test.js', 'src/api/' + this.name + '/' + this.name + '-api_test.js');
 };
+
+function usesMongo () {
+  try {
+    return require(require('path').join(process.cwd(), 'klei.json')).parts.indexOf('mongo') >= 0;
+  } catch (e) {
+  }
+  return false;
+}
