@@ -91,8 +91,8 @@ describe('klei generator', function () {
 
   it('should create a layout, module, bower.json and a jshintrc file if angular is chosen', function (done) {
     var expected = [
-      'src/app/myModule.html',
-      'src/app/myModule.js',
+      'src/app/index.html',
+      'src/app/app.js',
       'src/app/.jshintrc',
       'bower.json'
     ];
@@ -128,11 +128,11 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create a frontend module with a controller, spec and template if useexample is true and angular is chosen', function (done) {
+  it('should create a frontend module with a controller, test and template if useexample is true and angular is chosen', function (done) {
     var expected = [
-      'src/app/todo/index.js',
-      'src/app/todo/TodoCtrl.js',
-      'src/app/todo/TodoCtrl.spec.js',
+      'src/app/todo/todo.js',
+      'src/app/todo/todo-controller.js',
+      'src/app/todo/todo-controller_test.js',
       'src/app/todo/todo.html',
     ];
 
@@ -211,7 +211,7 @@ describe('klei generator', function () {
 
   it('should create an api module with controller if useexample is true and express is chosen', function (done) {
     var expected = [
-      'src/api/todo/todo.controller.js'
+      'src/api/todo/todo-api.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -227,7 +227,7 @@ describe('klei generator', function () {
 
   it('should create an api module with a model if useexample is true and both express and mongo is chosen', function (done) {
     var expected = [
-      'src/api/todo/Todo.model.js'
+      'src/api/todo/todo-model.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -259,7 +259,7 @@ describe('klei generator', function () {
 
   it('should create a model if useexample is true and mongo is chosen', function (done) {
     var expected = [
-      'src/models/Todo.js'
+      'src/models/todo-model.js'
     ];
 
     helpers.mockPrompt(klei, {

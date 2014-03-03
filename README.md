@@ -1,4 +1,4 @@
-# Klei Generator [![Build Status](https://secure.travis-ci.org/klei-dev/generator-klei.png?branch=master)](https://travis-ci.org/klei-dev/generator-klei)
+# Klei Generator [![Build Status](https://secure.travis-ci.org/klei/generator-klei.png?branch=master)](https://travis-ci.org/klei/generator-klei)
 
 > A Yeoman generator for generating awesome module or app boilerplates! MEAN-stack (all parts optional) with scalability in mind and with Grunt and Bower sweetness..
 

@@ -31,7 +31,7 @@ ApiGenerator.prototype.ask = function ask() {
       },
       validate: function (val) {
         if (!val || !val.length) {
-          return 'Provide a name!'
+          return 'Provide a name!';
         }
         return true;
       }
@@ -53,7 +53,7 @@ ApiGenerator.prototype.ask = function ask() {
       },
       validate: function (val) {
         if (!val || !val.length) {
-          return 'Provide a name!'
+          return 'Provide a name!';
         }
         return true;
       }
@@ -61,14 +61,16 @@ ApiGenerator.prototype.ask = function ask() {
   ];
 
   this.prompt(prompts, function (props) {
-    this.name = this._.camelize(this._.slugify(this._.humanize(props.name || this.name)));
-    this.camelName = this.name[0].toLowerCase() + this.name.slice(1);
-    this.titleName = this._.classify(this.name);
+    this.name = this._.dasherize(this._.slugify(this._.humanize(props.name || this.name)));
+    var nameCamel = this._.camelize(this.name);
+    this.camelName = nameCamel[0].toLowerCase() + nameCamel.slice(1);
+    this.titleName = this._.classify(nameCamel);
     this.model = props.model;
     if (this.model) {
-      this.modelName = this._.camelize(this._.slugify(this._.humanize(props.modelName)));
-      this.camelModelName = this.modelName[0].toLowerCase() + this.modelName.slice(1);
-      this.titleModelName = this._.classify(this.modelName);
+      this.modelName = this._.dasherize(this._.slugify(this._.humanize(props.modelName)));
+      var modelCamel = this._.camelize(this.modelName);
+      this.camelModelName = modelCamel[0].toLowerCase() + modelCamel.slice(1);
+      this.titleModelName = this._.classify(modelCamel);
     }
 
     cb();
@@ -77,9 +79,9 @@ ApiGenerator.prototype.ask = function ask() {
 
 ApiGenerator.prototype.files = function files() {
   if (this.model) {
-    this.template('_name.controller.js', 'src/api/' + this.name + '/' + this.name + '.controller.js');
-    this.template('_name.model.js', 'src/api/' + this.name + '/' + this.modelName + '.model.js');
+    this.template('_name-api.js', 'src/api/' + this.name + '/' + this.name + '-api.js');
+    this.template('_name-model.js', 'src/api/' + this.name + '/' + this.modelName + '-model.js');
   } else {
-    this.template('_name.no-model.controller.js', 'src/api/' + this.name + '/' + this.name + '.controller.js');
+    this.template('_name-no-model-api.js', 'src/api/' + this.name + '/' + this.name + '-api.js');
   }
 };

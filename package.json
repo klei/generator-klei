@@ -14,8 +14,8 @@
     "rest",
     "livereload"
   ],
-  "homepage": "https://github.com/klei-dev/generator-klei",
-  "bugs": "https://github.com/klei-dev/generator-klei/issues",
+  "homepage": "https://github.com/klei/generator-klei",
+  "bugs": "https://github.com/klei/generator-klei/issues",
   "author": {
     "name": "Joakim Bengtson",
     "email": "joakim@klei.se",
@@ -24,17 +24,17 @@
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/klei-dev/generator-klei.git"
+    "url": "git://github.com/klei/generator-klei.git"
   },
   "scripts": {
     "test": "NODE_ENV=test node_modules/.bin/mocha"
   },
   "dependencies": {
-    "yeoman-generator": "~0.14.2",
-    "chalk": "~0.3.0"
+    "yeoman-generator": "~0.16.0",
+    "chalk": "~0.4.0"
   },
   "devDependencies": {
-    "mocha": "~1.15.1"
+    "mocha": "~1.17.1"
   },
   "peerDependencies": {
     "yo": ">=1.0.0"

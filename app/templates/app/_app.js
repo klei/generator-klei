@@ -2,7 +2,8 @@
 angular.module('<%= modulename %>', [
   'ngRoute',
   <% if (useexample) { %>'<%= modulename %>.todo',
-  <% if (express) { %>'restangular',<% } %><% } %>'<%= modulename %>Templates'
+  <% if (express) { %>'restangular',
+  <% } %><% } %>'<%= modulename %>Templates'
 ])<% if (useexample) { %>
 .config(function ($routeProvider<% if (express) { %>, RestangularProvider<% } %>) {
   'use strict';

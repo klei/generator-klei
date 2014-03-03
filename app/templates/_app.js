@@ -4,17 +4,18 @@ var path = require('path'),
     exctrl = require('exctrl');
 
 module.exports = function () {
-  var app = app = express();
+  var app = express();
 
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.compress());
 
   exctrl
     .bind(app)
     .load({
-      pattern: __dirname + '/api/**/*.controller.js',
+      pattern: __dirname + '/api/**/*-api.js',
       prefix: 'api',
-      nameRegExp: /([^\/\\]+).controller.js$/
+      nameRegExp: /([^\/\\]+)-api.js$/
     });
 
   app.configure('development', function () {

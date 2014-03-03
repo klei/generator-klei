@@ -36,7 +36,7 @@ KleiGenerator.prototype.askForModulename = function askForModulename() {
     default: this.modulename,
     validate: function (val) {
       if (!val || !val.length) {
-        return 'Provide a name!'
+        return 'Provide a name!';
       }
       return true;
     }
@@ -158,16 +158,16 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
       this.mkdir('src/api/todo');
 
       if (this.mongo) {
-        this.copy('api/todo/todo.controller.js', 'src/api/todo/todo.controller.js');
-        this.copy('api/todo/Todo.model.js', 'src/api/todo/Todo.model.js');
+        this.copy('api/todo/todo-api.js', 'src/api/todo/todo-api.js');
+        this.copy('api/todo/todo-model.js', 'src/api/todo/todo-model.js');
       } else {
-        this.copy('api/todo-nomongo/todo.controller.js', 'src/api/todo/todo.controller.js');
+        this.copy('api/todo-nomongo/todo-api.js', 'src/api/todo/todo-api.js');
       }
     }
   } else if (this.mongo) {
     this.mkdir('src/models');
     if (this.useexample) {
-      this.copy('models/Todo.js', 'src/models/Todo.js');
+      this.copy('models/todo-model.js', 'src/models/todo-model.js');
     }
   }
 };
@@ -184,17 +184,17 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
   }
   if (this.angular) {
     this.mkdir('src/app');
-    this.template('app/_module.js', 'src/app/' + this.modulename + '.js');
-    this.template('app/_module.html', 'src/app/' + this.modulename + '.html');
+    this.template('app/_app.js', 'src/app/app.js');
+    this.template('app/_index.html', 'src/app/index.html');
     this.template('app/jshintrc', 'src/app/.jshintrc');
 
     this.copy('karma.conf.js', 'karma.conf.js');
 
     if (this.useexample) {
       this.mkdir('src/app/todo');
-      this.template('app/todo/_index.js', 'src/app/todo/index.js');
-      this.template('app/todo/_TodoCtrl.js', 'src/app/todo/TodoCtrl.js');
-      this.template('app/todo/_TodoCtrl.spec.js', 'src/app/todo/TodoCtrl.spec.js');
+      this.template('app/todo/_todo.js', 'src/app/todo/todo.js');
+      this.template('app/todo/_todo-controller.js', 'src/app/todo/todo-controller.js');
+      this.template('app/todo/_todo-controller_test.js', 'src/app/todo/todo-controller_test.js');
       this.copy('app/todo/todo.html', 'src/app/todo/todo.html');
       if (this.stylus) {
         this.copy('app/todo/todo.styl', 'src/app/todo/todo.styl');
