@@ -13,19 +13,19 @@ module.exports = function () {
   exctrl
     .bind(app)
     .load({
-      pattern: __dirname + '/api/**/*-api.js',
+      pattern: __dirname + '/../api/**/*-api.js',
       prefix: 'api',
       nameRegExp: /([^\/\\]+)-api.js$/
     });
 
   app.configure('development', function () {
-    app.use(express.static(path.join(__dirname, '..', '.tmp')));
-    app.use(express.static(path.join(__dirname, 'app')));
-    app.use(express.static(path.join(__dirname, '..', 'bower_components')));
+    app.use(express.static(path.join(__dirname, '..', '..', '.tmp')));
+    app.use(express.static(path.join(__dirname, '..', 'app')));
+    app.use(express.static(path.join(__dirname, '..', '..', 'bower_components')));
   });
 
   app.configure('production', function () {
-    app.use(express.static(path.join(__dirname, '..', 'dist')));
+    app.use(express.static(path.join(__dirname, '..', '..', 'dist')));
   });
 
   return app;
