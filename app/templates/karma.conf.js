@@ -8,14 +8,6 @@ module.exports = function ( karma ) {
      */
     basePath: './',
 
-    /**
-     * This is the list of file patterns to load into the browser during testing.
-     */
-    files: [
-      /** injector:js **/
-      /** endinjector **/
-    ],
-
     frameworks: [ 'mocha', 'chai' ],
     plugins: [ 'karma-mocha', 'karma-chai', 'karma-phantomjs-launcher' ],
 

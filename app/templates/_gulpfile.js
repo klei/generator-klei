@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     lazypipe = require('lazypipe')<% } %>,
     stylish = require('jshint-stylish'),
     klei = require('./klei'),
-    doLiveReload = false;
+    isWatching = false;
 <% if (angular) { %>
 var htmlminOpts = {
   removeComments: true,
@@ -78,7 +78,7 @@ gulp.task('csslint', ['styles'], function () {
  * Scripts
  */
 gulp.task('scripts-dist', ['templates-dist'], function () {
-  return appFiles().pipe(dist('js', klei.name, true));
+  return appFiles().pipe(dist('js', klei.name, {ngmin: true}));
 });
 
 /**
@@ -140,7 +140,7 @@ gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
  * Watch
  */
 gulp.task('watch', ['default'], function () {
-  doLiveReload = true;
+  isWatching = true;
   gulp.watch(['./gulpfile.js'<% if (!choseType) { %>, './src/*.js'<% } %><% if (addconfig) { %>, './src/config/*.js'<% } %><% if (express) { %>, './src/api/{,*/}*.js'<% } %>], ['jshint<% if (angular) { %>-backend<% } %>']);<% if (angular) { %>
   gulp.watch('./src/app/**/*.js', ['jshint-app']).on('change', function (evt) {
     if (evt.type !== 'changed') {
@@ -167,13 +167,31 @@ gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular
 gulp.task('lint', ['jshint'<% if (stylus) { %>, 'csslint'<% } %>]);
 
 /**
- * File pipes
+ * Test
  */
-
+gulp.task('karma', ['templates'], function () {
+  return new queue({objectMode: true})
+    .queue(g.bowerFiles().pipe(g.filter('**/*.js')))
+    .queue(gulp.src('./bower_components/angular-mocks/angular-mocks.js'))
+    .queue(appFiles({includeTests: true}))
+    .done()
+    .pipe(g.karma({
+      configFile: 'karma.conf.js',
+      action: 'run'
+    }));
+});
+<% if (angular || stylus) { %>
+<% if (stylus) { %>
+/**
+ * All CSS files as a stream
+ */
 function cssFiles (opt) {
   return gulp.src('./.tmp/css/**/*.css', opt);
 }
-
+<% } %><% if (angular) { %>
+/**
+ * All AngularJS application files as a stream
+ */
 function appFiles (opt) {
   var files = [
     './.tmp/' + klei.name + 'Templates.js',
@@ -197,27 +215,37 @@ function appFiles (opt) {
     }));
 }
 
+/**
+ * All AngularJS templates/partials as a stream
+ */
 function templateFiles (opt) {
   return gulp.src(['./src/app/**/*.html', '!./src/app/index.html'], opt)
     .pipe(opt && opt.min ? g.htmlmin(htmlminOpts) : noop());
 }
-
+<% } %>
 /**
- * Reusable pipes
+ * Concat, rename, minify
+ *
+ * @param {String} ext
+ * @param {String} name
+ * @param {Object} opt
  */
-
-function dist (type, name, ngmin) {
+function dist (ext, name, opt) {
+  opt = opt || {};
   return lazypipe()
-    .pipe(g.concat, name + '.' + type)
+    .pipe(g.concat, name + '.' + ext)
     .pipe(gulp.dest, './dist')
-    .pipe(ngmin ? g.ngmin : noop)
-    .pipe(ngmin ? g.rename : noop, name + '.annotated.' + type)
-    .pipe(ngmin ? gulp.dest : noop, './dist')
-    .pipe(type === 'js' ? g.uglify : g.minifyCss)
-    .pipe(g.rename, name + '.min.' + type)
+    .pipe(opt.ngmin ? g.ngmin : noop)
+    .pipe(opt.ngmin ? g.rename : noop, name + '.annotated.' + ext)
+    .pipe(opt.ngmin ? gulp.dest : noop, './dist')
+    .pipe(ext === 'js' ? g.uglify : g.minifyCss)
+    .pipe(g.rename, name + '.min.' + ext)
     .pipe(gulp.dest, './dist')();
 }
 
+/**
+ * Build AngularJS templates/partials
+ */
 function buildTemplates () {
   return lazypipe()
     .pipe(g.ngHtml2js, {
@@ -230,14 +258,19 @@ function buildTemplates () {
     .pipe(livereload)();
 }
 
+/**
+ * Livereload (or noop if not run by watch)
+ */
+function livereload () {
+  return lazypipe()
+    .pipe(isWatching ? g.livereload : noop)();
+}
+<% } %>
+/**
+ * Jshint with stylish reporter
+ */
 function jshint (jshintfile) {
   return lazypipe()
     .pipe(g.jshint, jshintfile)
     .pipe(g.jshint.reporter, stylish)();
 }
-
-function livereload () {
-  return lazypipe()
-    .pipe(doLiveReload ? g.livereload : noop)();
-}
-
