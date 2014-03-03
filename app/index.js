@@ -138,7 +138,7 @@ KleiGenerator.prototype.basicFiles = function basicFiles() {
     this.copy('config/env.js', 'src/config/env.js');
     this.template('config/_development.json', 'src/config/development.json');
     this.template('config/_development.json', 'src/config/production.json');
-    this.template('config/_development.json', 'src/config/test.json');
+    this.template('config/_test.json', 'src/config/test.json');
 
   }
 };
