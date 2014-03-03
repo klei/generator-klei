@@ -157,6 +157,8 @@ KleiGenerator.prototype.backendFiles = function backendFiles() {
     if (this.useexample) {
       this.mkdir('src/api/todo');
 
+      this.copy('api/todo/todo-api_test.js', 'src/api/todo/todo-api_test.js');
+
       if (this.mongo) {
         this.copy('api/todo/todo-api.js', 'src/api/todo/todo-api.js');
         this.copy('api/todo/todo-model.js', 'src/api/todo/todo-model.js');
