@@ -39,7 +39,7 @@ gulp.task('jshint', ['jshint-backend', 'jshint-app']);
 <% } %>
 <% if (express) { %>
 gulp.task('nodemon', function () {
-  g.nodemon({watch: ['src']<% if (angular || stylus) { %>, ignore: [<% if (angular) { %>'src/app'<% } %><% if (angular && stylus) { %>, <% } %><% if (stylus) { %>'src/styles'<% } %>]<% } %>});
+  g.nodemon({script: './src/index.js', watch: ['src']<% if (angular || stylus) { %>, ignore: [<% if (angular) { %>'src/app'<% } %><% if (angular && stylus) { %>, <% } %><% if (stylus) { %>'src/styles'<% } %>]<% } %>});
 });
 <% } %><% if (stylus) { %>
 /**
