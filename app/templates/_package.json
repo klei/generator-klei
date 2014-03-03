@@ -31,6 +31,7 @@
     "gulp-filter": "~0.2.1",
     "lazypipe": "~0.1.4",
     "tiny-lr": "~0.0.5",
+    "gulp-cached": "~0.0.3",
     "gulp-embedlr": "~0.5.2",
     "gulp-livereload": "~1.1.1",
     "gulp-header": "~1.0.2",

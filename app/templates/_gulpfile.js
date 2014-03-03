@@ -30,12 +30,15 @@ gulp.task('jshint<% if (angular) { %>-backend<% } %>', function () {
     './src/config/*.js'<% } %><% if (express) { %>,
     './src/api/**/*.js'<% } %>
   ])
+    .pipe(g.cached('jshint'))
     .pipe(jshint('./.jshintrc'));
 });<% if (angular) { %>
 
 gulp.task('jshint-app', function () {
   return gulp.src('./src/app/**/*.js')
-    .pipe(jshint('./src/app/.jshintrc'));
+    .pipe(g.cached('jshint-app'))
+    .pipe(jshint('./src/app/.jshintrc'))
+    .pipe(livereload());
 });
 
 gulp.task('jshint', ['jshint-backend', 'jshint-app']);
@@ -61,6 +64,7 @@ gulp.task('styles', ['clean-css'], function () {
   ])
     .pipe(g.stylus({use: ['nib']}))
     .pipe(gulp.dest('./.tmp/css/'))
+    .pipe(g.cached('built-css'))
     .pipe(livereload());
 });
 
@@ -70,6 +74,7 @@ gulp.task('styles-dist', ['styles'], function () {
 
 gulp.task('csslint', ['styles'], function () {
   return cssFiles()
+    .pipe(g.cached('csslint'))
     .pipe(g.csslint('./.csslintrc'))
     .pipe(g.csslint.reporter());
 });
