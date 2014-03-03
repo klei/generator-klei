@@ -19,8 +19,8 @@ module.exports = function () {
     });
 
   app.configure('development', function () {
-    app.use(express.static(path.join(__dirname, 'app')));
     app.use(express.static(path.join(__dirname, '..', '.tmp')));
+    app.use(express.static(path.join(__dirname, 'app')));
     app.use(express.static(path.join(__dirname, '..', 'bower_components')));
   });
 
