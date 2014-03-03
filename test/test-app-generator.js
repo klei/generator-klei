@@ -193,6 +193,23 @@ describe('klei generator', function () {
     });
   });
 
+  it('should create frontend app stylesheets if both angular and stylus is chosen', function (done) {
+    var expected = [
+      'src/app/app.styl',
+      'src/app/styles/_base.styl',
+      'src/app/styles/_forms.styl'
+    ];
+
+    helpers.mockPrompt(klei, {
+      'types': ['angular', 'stylus']
+    });
+    klei.options['skip-install'] = true;
+    klei.run({}, function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
   it('should create a frontend module stylesheet if useexample is true and both angular and stylus is chosen', function (done) {
     var expected = [
       'src/app/todo/todo.styl'

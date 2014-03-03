@@ -46,7 +46,7 @@ gulp.task('jshint', ['jshint-backend', 'jshint-app']);
 <% } %>
 <% if (express) { %>
 gulp.task('nodemon', function () {
-  g.nodemon({script: './src/index.js', watch: ['src']<% if (angular || stylus) { %>, ignore: [<% if (angular) { %>'src/app'<% } %><% if (angular && stylus) { %>, <% } %><% if (stylus) { %>'src/styles'<% } %>]<% } %>});
+  g.nodemon({script: './src/index.js', watch: ['src']<% if (angular || stylus) { %>, ignore: [<% if (angular) { %>'src/app'<% } %><% if (stylus && !angular) { %>'src/styles'<% } %>]<% } %>});
 });
 <% } %><% if (stylus) { %>
 /**
@@ -58,10 +58,9 @@ gulp.task('clean-css', function () {
 
 gulp.task('styles', ['clean-css'], function () {
   return gulp.src([
-    './src/styles/**/*.styl',
-    '!./src/styles/**/_*.styl'<% if (angular) { %>,
-    './src/app/**/*.styl',
-    '!./src/app/**/_*.styl'<% } %>
+    <% if (angular) { %>'./src/app/**/*.styl',
+    '!./src/app/**/_*.styl'<% } else { %>'./src/styles/**/*.styl',
+    '!./src/styles/**/_*.styl'<% } %>
   ])
     .pipe(g.stylus({use: ['nib']}))
     .pipe(gulp.dest('./.tmp/css/'))
@@ -156,7 +155,7 @@ gulp.task('watch', ['default'], function () {
   });
   gulp.watch('./src/app/index.html', ['index']);
   gulp.watch(['./src/app/**/*.html', '!./src/app/index.html'], ['templates']);<% } %><% if (stylus) { %>
-  gulp.watch(['./src/styles/**/*.styl'<% if (angular) { %>, './src/app/**/*.styl'<% } %>], ['csslint']<% if (angular) { %>).on('change', function (evt) {
+  gulp.watch([<% if (angular) { %>'./src/app/**/*.styl'<% } else { %>'./src/styles/**/*.styl'<% } %>], ['csslint']<% if (angular) { %>).on('change', function (evt) {
     if (evt.type !== 'changed') {
       gulp.start('index');
     }
