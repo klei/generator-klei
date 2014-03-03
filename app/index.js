@@ -185,7 +185,7 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
   if (this.angular) {
     this.mkdir('src/app');
     this.template('app/_app.js', 'src/app/app.js');
-    this.template('app/_app.html', 'src/app/index.html');
+    this.template('app/_index.html', 'src/app/index.html');
     this.template('app/jshintrc', 'src/app/.jshintrc');
 
     this.copy('karma.conf.js', 'karma.conf.js');

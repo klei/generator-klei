@@ -1,6 +1,6 @@
 
 var mongoose = require('mongoose'),
-    Todo = mongoose.model('Todo');
+    Todo = mongoose.model('todo');
 
 exports.create = function (req, res) {
   var todo = new Todo(req.body);
