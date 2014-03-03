@@ -1,15 +1,12 @@
 
-var config = require('./config'),
-    env = require('./config/env'),
-    pkg = require('../package')<% if (express) { %>,
+var env = require('./config/env')<% if (express) { %>,
     http = require('http'),
     port = process.env.PORT || 1337,
-    app = require('./app')<% } %><% if (mongo) { %>,
-    mongoose = require('mongoose'),
-    models = require('./models');
+    app = require('./lib/app')<% } %><% if (mongo) { %>,
+    db = require('./lib/db');
 
-mongoose.connect(config.db);
-models(mongoose);<% } else { %>;<% } %>
+// Connect db and load models:
+db();<% } else { %>;<% } %>
 
 <% if (express) { %>
 http.createServer(app()).listen(port, function () {

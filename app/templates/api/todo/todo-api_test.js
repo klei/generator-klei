@@ -2,7 +2,8 @@
 var chai = require('chai'),
     should = chai.should(),
     supertest = require('supertest'),
-    app = require('../../app'),
+    db = require('../../lib/db')(),
+    app = require('../../lib/app')(),
     request = supertest(app);
 
 describe('todo-api', function () {

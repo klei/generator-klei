@@ -209,9 +209,10 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create an api module with controller if useexample is true and express is chosen', function (done) {
+  it('should create an api module with controller and test if useexample is true and express is chosen', function (done) {
     var expected = [
-      'src/api/todo/todo-api.js'
+      'src/api/todo/todo-api.js',
+      'src/api/todo/todo-api_test.js',
     ];
 
     helpers.mockPrompt(klei, {
@@ -289,10 +290,11 @@ describe('klei generator', function () {
     });
   });
 
-  it('should create an index and models file if mongo is chosen', function (done) {
+  it('should create an index, db and models file if mongo is chosen', function (done) {
     var expected = [
       'src/index.js',
-      'src/models.js'
+      'src/lib/db.js',
+      'src/lib/models.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -308,7 +310,7 @@ describe('klei generator', function () {
   it('should create an index and app file if express is chosen', function (done) {
     var expected = [
       'src/index.js',
-      'src/app.js'
+      'src/lib/app.js'
     ];
 
     helpers.mockPrompt(klei, {
