@@ -2,7 +2,9 @@
 var gulp = require('gulp'),
     g = require('gulp-load-plugins')(),
     noop = g.util.noop<% if (angular || stylus) { %>,
+    dirname = require('path').dirname,
     es = require('event-stream'),
+    sort = require('sort-stream'),
     lazypipe = require('lazypipe')<% } %>,
     stylish = require('jshint-stylish'),
     klei = require('./klei'),
@@ -105,13 +107,11 @@ gulp.task('vendors', function () {
 /**
  * Inject
  */
-gulp.task('inject', ['templates', 'styles'], function () {
+gulp.task('inject', function () {
   var opt = {read: false};
-  return gulp.src('./src/app/' + klei.name + '.html')
-    .pipe(g.inject(
-      es.merge(g.bowerFiles(opt), appFiles(opt), cssFiles(opt)),
-      {ignorePath: ['bower_components', '.tmp', 'src/app']}
-    ))
+  return gulp.src('./src/app/index.html')
+    .pipe(g.inject(g.bowerFiles(opt), {ignorePath: 'bower_components', starttag: '<!-- inject:vendor:{{ext}} -->'}))
+    .pipe(g.inject(es.merge(appFiles(opt), cssFiles(opt)), {ignorePath: ['.tmp', 'src/app']}))
     .pipe(gulp.dest('./src/app/'));
 });
 
@@ -119,8 +119,7 @@ gulp.task('inject', ['templates', 'styles'], function () {
  * Index
  */
 gulp.task('index', ['inject'], function () {
-  return gulp.src('./src/app/' + klei.name + '.html')
-    .pipe(g.rename('index.html'))
+  return gulp.src('./src/app/index.html')
     .pipe(g.embedlr())
     .pipe(gulp.dest('./.tmp/'))
     .pipe(livereload());
@@ -130,10 +129,10 @@ gulp.task('index', ['inject'], function () {
  * Dist
  */
 gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
-  return gulp.src('./src/app/' + klei.name + '.html')
-    .pipe(g.inject(gulp.src(['./dist/vendors.min.{js,css}', './dist/' + klei.name + '.min.{js,css}']), {ignorePath: 'dist'}))
+  return gulp.src('./src/app/index.html')
+    .pipe(g.inject(gulp.src('./dist/vendors.min.{js,css}'), {ignorePath: 'dist', starttag: '<!-- inject:vendor:{{ext}} -->'}))
+    .pipe(g.inject(gulp.src('./dist/' + klei.name + '.min.{js,css}'), {ignorePath: 'dist'}))
     .pipe(g.htmlmin(htmlminOpts))
-    .pipe(g.rename('index.html'))
     .pipe(gulp.dest('./dist/'));
 });
 <% } %>
@@ -141,22 +140,26 @@ gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
  * Watch
  */
 gulp.task('watch', ['default'], function () {
-  var lr = g.livereload();
   doLiveReload = true;
   gulp.watch(['./gulpfile.js'<% if (!choseType) { %>, './src/*.js'<% } %><% if (addconfig) { %>, './src/config/*.js'<% } %><% if (express) { %>, './src/api/{,*/}*.js'<% } %>], ['jshint<% if (angular) { %>-backend<% } %>']);<% if (angular) { %>
-  gulp.watch('./src/app/**/*.js', function (evt) {
-    gulp.src(evt.path).pipe(jshint('./src/app/.jshintrc'));
-    lr.changed(evt.path);
+  gulp.watch('./src/app/**/*.js', ['jshint-app']).on('change', function (evt) {
+    if (evt.type !== 'changed') {
+      gulp.start('index');
+    }
   });
-  gulp.watch('./src/app/' + klei.name + '.html', ['index']);
-  gulp.watch(['./src/app/**/*.html', '!./src/app/' + klei.name + '.html'], ['templates']);<% } %><% if (stylus) { %>
-  gulp.watch(['./src/styles/**/*.styl'<% if (angular) { %>, './src/app/**/*.styl'<% } %>], ['csslint']);<% } %>
+  gulp.watch('./src/app/index.html', ['index']);
+  gulp.watch(['./src/app/**/*.html', '!./src/app/index.html'], ['templates']);<% } %><% if (stylus) { %>
+  gulp.watch(['./src/styles/**/*.styl'<% if (angular) { %>, './src/app/**/*.styl'<% } %>], ['csslint']<% if (angular) { %>).on('change', function (evt) {
+    if (evt.type !== 'changed') {
+      gulp.start('index');
+    }
+  }<% } %>);<% } %>
 });
 
 /**
  * Default task
  */
-gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular) { %>, 'index'<% } %>]);
+gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular) { %>, 'templates', 'index'<% } %>]);
 
 /**
  * Lint everything
@@ -172,20 +175,30 @@ function cssFiles (opt) {
 }
 
 function appFiles (opt) {
-  return gulp.src(
-    [
-      './.tmp/' + klei.name + 'Templates.js',
-      './src/app/*.js',
-      './src/app/**/index.js',
-      './src/app/**/*.js',
-      '!./src/app/**/*.spec.js'
-    ],
-    opt
-  );
+  var files = [
+    './.tmp/' + klei.name + 'Templates.js',
+    './src/app/**/*.js',
+    '!./src/app/**/*_test.js'
+  ];
+  if (opt.includeTests) {
+    files.pop();
+    delete opt.includeTests;
+  }
+  return gulp.src(files, opt)
+    .pipe(sort(function (a, b) {
+      if (dirname(a.path) === dirname(b.path)) {
+        // Reverse sort if in same dir, to be able to load module definitions before their use
+        // for Google AngularJS naming recommendations. (e.g. todo.js must come before todo-controller.js)
+        return b.path.localeCompare(a.path);
+      } else {
+        // Otherwise, leave as is
+        return 0;
+      }
+    }));
 }
 
 function templateFiles (opt) {
-  return gulp.src(['./src/app/**/*.html', '!./src/app/' + klei.name + '.html'], opt)
+  return gulp.src(['./src/app/**/*.html', '!./src/app/index.html'], opt)
     .pipe(opt && opt.min ? g.htmlmin(htmlminOpts) : noop());
 }
 
