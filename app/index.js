@@ -145,15 +145,17 @@ KleiGenerator.prototype.basicFiles = function basicFiles() {
 
 KleiGenerator.prototype.backendFiles = function backendFiles() {
   if (this.express || this.mongo) {
+    if (!this.addconfig) {
+      this.mkdir('src/config');
+    }
     this.template('_index.js', 'src/index.js');
-    this.mkdir('src/lib');
   }
   if (this.mongo) {
-    this.template('lib/_models.js', 'src/lib/models.js');
-    this.template('lib/db.js', 'src/lib/db.js');
+    this.template('config/_models.js', 'src/config/models.js');
+    this.template('config/db.js', 'src/config/db.js');
   }
   if (this.express) {
-    this.template('lib/_app.js', 'src/lib/app.js');
+    this.template('config/_app.js', 'src/config/app.js');
     this.mkdir('src/api');
 
     if (this.useexample) {

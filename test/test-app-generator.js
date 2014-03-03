@@ -293,8 +293,8 @@ describe('klei generator', function () {
   it('should create an index, db and models file if mongo is chosen', function (done) {
     var expected = [
       'src/index.js',
-      'src/lib/db.js',
-      'src/lib/models.js'
+      'src/config/db.js',
+      'src/config/models.js'
     ];
 
     helpers.mockPrompt(klei, {
@@ -310,7 +310,7 @@ describe('klei generator', function () {
   it('should create an index and app file if express is chosen', function (done) {
     var expected = [
       'src/index.js',
-      'src/lib/app.js'
+      'src/config/app.js'
     ];
 
     helpers.mockPrompt(klei, {

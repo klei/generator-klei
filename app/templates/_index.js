@@ -2,8 +2,8 @@
 var env = require('./config/env')<% if (express) { %>,
     http = require('http'),
     port = process.env.PORT || 1337,
-    app = require('./lib/app')<% } %><% if (mongo) { %>,
-    db = require('./lib/db');
+    app = require('./config/app')<% } %><% if (mongo) { %>,
+    db = require('./config/db');
 
 // Connect db and load models:
 db();<% } else { %>;<% } %>
