@@ -1,5 +1,5 @@
 
-var config = require('.'),
+var config = require('./.'),
     mongoose = require('mongoose'),
     models = require('./models'),
     loaded = false;

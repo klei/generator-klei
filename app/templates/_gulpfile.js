@@ -1,6 +1,7 @@
 
 var gulp = require('gulp'),
     g = require('gulp-load-plugins')(),
+    join = require('path').join,
     noop = g.util.noop<% if (angular || stylus) { %>,
     dirname = require('path').dirname,
     es = require('event-stream'),
@@ -175,6 +176,17 @@ gulp.task('lint', ['jshint'<% if (stylus) { %>, 'csslint'<% } %>]);
 /**
  * Test
  */
+gulp.task('<% if (angular) { %>mocha<% } else { %>test<% } %>', function () {
+  return gulp.src(['./src/**/*_test.js', '!./src/app/**/*_test.js'], {read: false})
+    .pipe(g.spawnMocha({
+      require: join(__dirname, 'src', 'config', 'test-setup.js'),
+      bin: join(__dirname, 'node_modules', '.bin', 'mocha')
+    }))
+    .on('error', function (err) {
+      process.exit(1);
+    });
+});
+<% if (angular) { %>
 gulp.task('karma', ['templates'], function () {
   return new queue({objectMode: true})
     .queue(g.bowerFiles().pipe(g.filter('**/*.js')))
@@ -186,6 +198,9 @@ gulp.task('karma', ['templates'], function () {
       action: 'run'
     }));
 });
+
+gulp.task('test', ['mocha', 'karma']);
+<% } %>
 <% if (angular || stylus) { %>
 <% if (stylus) { %>
 /**
