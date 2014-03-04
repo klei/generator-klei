@@ -181,7 +181,7 @@ gulp.task('<% if (angular) { %>mocha<% } else { %>test<% } %>', function () {
       require: join(__dirname, 'src', 'config', 'test-setup.js'),
       bin: join(__dirname, 'node_modules', '.bin', 'mocha')
     }))
-    .on('error', function (err) {
+    .on('error', function () {
       process.exit(1);
     });
 });

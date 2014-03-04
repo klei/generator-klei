@@ -1,3 +1,4 @@
+/* jshint unused: false */
 /* global describe, it */
 var chai = require('chai'),
     should = chai.should(),
