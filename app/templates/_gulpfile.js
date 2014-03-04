@@ -1,6 +1,6 @@
 
 var gulp = require('gulp'),
-    g = require('gulp-load-plugins')(),
+    g = require('gulp-load-plugins')({lazy: false}),
     join = require('path').join,
     noop = g.util.noop<% if (angular || stylus) { %>,
     dirname = require('path').dirname,
