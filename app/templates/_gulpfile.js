@@ -141,6 +141,7 @@ gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
 /**
  * Watch
  */
+gulp.task('serve', ['watch']);
 gulp.task('watch', [<% if (express) { %>'nodemon', <% } %>'default'], function () {
   isWatching = true;
   // Initiate livereload server:
