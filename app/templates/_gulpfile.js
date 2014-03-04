@@ -111,25 +111,21 @@ gulp.task('vendors', function () {
 });
 
 /**
- * Inject
+ * Index
  */
-gulp.task('inject', function () {
+gulp.task('index', index);
+gulp.task('build-all', ['styles', 'templates'], index);
+
+function index () {
   var opt = {read: false};
   return gulp.src('./src/app/index.html')
     .pipe(g.inject(g.bowerFiles(opt), {ignorePath: 'bower_components', starttag: '<!-- inject:vendor:{{ext}} -->'}))
     .pipe(g.inject(es.merge(appFiles(opt), cssFiles(opt)), {ignorePath: ['.tmp', 'src/app']}))
-    .pipe(gulp.dest('./src/app/'));
-});
-
-/**
- * Index
- */
-gulp.task('index', ['inject'], function () {
-  return gulp.src('./src/app/index.html')
+    .pipe(gulp.dest('./src/app/'))
     .pipe(g.embedlr())
     .pipe(gulp.dest('./.tmp/'))
     .pipe(livereload());
-});
+}
 
 /**
  * Dist
@@ -167,7 +163,7 @@ gulp.task('watch', ['default'], function () {
 /**
  * Default task
  */
-gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular) { %>, 'templates', 'index'<% } %>]);
+gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular) { %>, 'build-all'<% } %>]);
 
 /**
  * Lint everything
