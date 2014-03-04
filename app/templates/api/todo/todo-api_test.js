@@ -2,8 +2,8 @@
 /* global describe, it */
 var chai = require('chai'),
     should = chai.should(),
-    supertest = require('supertest'),
-    db = require('../../config/db')(),
+    supertest = require('supertest')<% if (mongo) { %>,
+    db = require('../../config/db')()<% } %>,
     app = require('../../config/app')(),
     request = supertest(app);
 
