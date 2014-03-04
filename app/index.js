@@ -184,7 +184,7 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
     this.template('_bower.json', 'bower.json');
   }
   if (this.stylus) {
-    this.copy('csslintrc', '.csslintrc');
+    this.copy('csslintrc', 'src/.csslintrc');
     if (this.angular) {
       this.mkdir('src/app/styles');
       this.copy('app/app.styl', 'src/app/app.styl');
@@ -219,6 +219,6 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
 
 KleiGenerator.prototype.projectfiles = function projectfiles() {
   this.template('_gitignore', '.gitignore');
-  this.copy('editorconfig', '.editorconfig');
-  this.copy('jshintrc', '.jshintrc');
+  this.copy('editorconfig', 'src/.editorconfig');
+  this.copy('jshintrc', 'src/.jshintrc');
 };

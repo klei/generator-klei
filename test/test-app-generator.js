@@ -23,8 +23,8 @@ describe('klei generator', function () {
 
   it('should create dotfiles, gulpfile.js, klei.json and package.json', function (done) {
     var expected = [
-      '.jshintrc',
-      '.editorconfig',
+      'src/.jshintrc',
+      'src/.editorconfig',
       '.gitignore',
       'package.json',
       'klei.json',
@@ -43,7 +43,7 @@ describe('klei generator', function () {
 
   it('should create css dotfiles and bower.json if stylus is chosen', function (done) {
     var expected = [
-      '.csslintrc',
+      'src/.csslintrc',
       'bower.json'
     ];
 

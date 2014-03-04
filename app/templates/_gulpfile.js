@@ -32,7 +32,7 @@ gulp.task('jshint<% if (angular) { %>-backend<% } %>', function () {
     './src/api/**/*.js'<% } %>
   ])
     .pipe(g.cached('jshint'))
-    .pipe(jshint('./.jshintrc'));
+    .pipe(jshint('./src/.jshintrc'));
 });<% if (angular) { %>
 
 gulp.task('jshint-app', function () {
@@ -75,7 +75,7 @@ gulp.task('styles-dist', ['styles'], function () {
 gulp.task('csslint', ['styles'], function () {
   return cssFiles()
     .pipe(g.cached('csslint'))
-    .pipe(g.csslint('./.csslintrc'))
+    .pipe(g.csslint('./src/.csslintrc'))
     .pipe(g.csslint.reporter());
 });
 <% } %>
