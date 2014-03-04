@@ -121,6 +121,11 @@ KleiGenerator.prototype.ask = function ask() {
       this.useexample = props.useexample;
     }
 
+    this.backendTests = this.express || this.mongo || !this.choseType;
+    this.frontendTests = this.angular;
+    this.tests = this.backendTests || this.frontendTests;
+    this.dist = this.angular || this.stylus;
+
     cb();
   }.bind(this));
 };

@@ -1,15 +1,15 @@
 
 var gulp = require('gulp'),
-    g = require('gulp-load-plugins')({lazy: false}),
-    join = require('path').join,
-    noop = g.util.noop<% if (angular || stylus) { %>,
+    g = require('gulp-load-plugins')({lazy: false})<% if (backendTests) { %>,
+    join = require('path').join<% } %>,
+    noop = g.util.noop<% if (angular) { %>,
     dirname = require('path').dirname,
     es = require('event-stream'),
     sort = require('sort-stream'),
-    queue = require('streamqueue'),
+    queue = require('streamqueue')<% } %><% if (dist) { %>,
     lazypipe = require('lazypipe')<% } %>,
     stylish = require('jshint-stylish'),
-    klei = require('./klei'),
+    bower = require('./bower'),
     isWatching = false;
 <% if (angular) { %>
 var htmlminOpts = {
@@ -68,8 +68,8 @@ gulp.task('styles', ['clean-css'], function () {
     .pipe(livereload());
 });
 
-gulp.task('styles-dist', ['styles'], function () {
-  return cssFiles().pipe(dist('css', klei.name));
+gulp.task('<% if (angular) { %>styles-<% } %>dist', ['styles'], function () {
+  return cssFiles().pipe(dist('css', bower.name));
 });
 
 gulp.task('csslint', ['styles'], function () {
@@ -84,7 +84,7 @@ gulp.task('csslint', ['styles'], function () {
  * Scripts
  */
 gulp.task('scripts-dist', ['templates-dist'], function () {
-  return appFiles().pipe(dist('js', klei.name, {ngmin: true}));
+  return appFiles().pipe(dist('js', bower.name, {ngmin: true}));
 });
 
 /**
@@ -133,7 +133,7 @@ function index () {
 gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
   return gulp.src('./src/app/index.html')
     .pipe(g.inject(gulp.src('./dist/vendors.min.{js,css}'), {ignorePath: 'dist', starttag: '<!-- inject:vendor:{{ext}} -->'}))
-    .pipe(g.inject(gulp.src('./dist/' + klei.name + '.min.{js,css}'), {ignorePath: 'dist'}))
+    .pipe(g.inject(gulp.src('./dist/' + bower.name + '.min.{js,css}'), {ignorePath: 'dist'}))
     .pipe(g.htmlmin(htmlminOpts))
     .pipe(gulp.dest('./dist/'));
 });
@@ -169,22 +169,22 @@ gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular
  * Lint everything
  */
 gulp.task('lint', ['jshint'<% if (stylus) { %>, 'csslint'<% } %>]);
-
-/**
+<% if (tests) { %>/**
  * Test
  */
-gulp.task('<% if (angular) { %>mocha<% } else { %>test<% } %>', function () {
+<% } %><% if (backendTests) { %>
+gulp.task('<% if (frontendTests) { %>mocha<% } else { %>test<% } %>', function () {
   return gulp.src(['./src/**/*_test.js', '!./src/app/**/*_test.js'], {read: false})
     .pipe(g.spawnMocha({
-      require: join(__dirname, 'src', 'config', 'test-setup.js'),
-      bin: join(__dirname, 'node_modules', '.bin', 'mocha')
+      <% if (addconfig) { %>require: join(__dirname, 'src', 'config', 'test-setup.js'),
+      <% } %>bin: join(__dirname, 'node_modules', '.bin', 'mocha')
     }))
     .on('error', function () {
       process.exit(1);
     });
 });
-<% if (angular) { %>
-gulp.task('karma', ['templates'], function () {
+<% } %><% if (frontendTests) { %>
+gulp.task('<% if (backendTests) { %>karma<% } else { %>test<% } %>', ['templates'], function () {
   return new queue({objectMode: true})
     .queue(g.bowerFiles().pipe(g.filter('**/*.js')))
     .queue(gulp.src('./bower_components/angular-mocks/angular-mocks.js'))
@@ -195,10 +195,10 @@ gulp.task('karma', ['templates'], function () {
       action: 'run'
     }));
 });
-
+<% } %><% if (backendTests && frontendTests) { %>
 gulp.task('test', ['mocha', 'karma']);
 <% } %>
-<% if (angular || stylus) { %>
+<% if (dist) { %>
 <% if (stylus) { %>
 /**
  * All CSS files as a stream
@@ -212,13 +212,12 @@ function cssFiles (opt) {
  */
 function appFiles (opt) {
   var files = [
-    './.tmp/' + klei.name + 'Templates.js',
-    './src/app/**/*.js',
-    '!./src/app/**/*_test.js'
+    './.tmp/' + bower.name + '-templates.js',
+    './src/app/**/*.js'
   ];
-  if (opt.includeTests) {
-    files.pop();
-    delete opt.includeTests;
+  opt = opt || {};
+  if (!opt.includeTests) {
+    files.push('!./src/app/**/*_test.js');
   }
   return gulp.src(files, opt)
     .pipe(sort(function (a, b) {
@@ -247,11 +246,11 @@ function templateFiles (opt) {
 function buildTemplates () {
   return lazypipe()
     .pipe(g.ngHtml2js, {
-      moduleName: klei.name + 'Templates',
-      prefix: '/' + klei.name + '/',
+      moduleName: bower.name + '-templates',
+      prefix: '/' + bower.name + '/',
       stripPrefix: '/src/app'
     })
-    .pipe(g.concat, klei.name + 'Templates.js')
+    .pipe(g.concat, bower.name + '-templates.js')
     .pipe(gulp.dest, './.tmp')
     .pipe(livereload)();
 }

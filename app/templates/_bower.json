@@ -1,8 +1,8 @@
 {
-  "name": "km-<%= modulenameDashed %>",
+  "name": "<%= modulenameDashed %>",
   "main": [
-    <% if (angular) { %>"/dist/km-<%= modulenameDashed %>.js"<% } %><% if (angular && stylus) { %>,
-    <% } %><% if (stylus) { %>"/dist/km-<%= modulenameDashed %>.css"<% } %>
+    <% if (angular) { %>"/dist/<%= modulenameDashed %>.min.js"<% } %><% if (angular && stylus) { %>,
+    <% } %><% if (stylus) { %>"/dist/<%= modulenameDashed %>.min.css"<% } %>
   ],
   "version": "0.1.0",
   "description": "TODO",
@@ -11,20 +11,19 @@
   ],
   "ignore": [
     "**/.*",
+    "package.json",
+    "klei.json",
+    "gulpfile.js",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "src"
   ],
   "dependencies": {
-    <% if (angular) { %>"angular": "~1.2.7",
-    "angular-route": "~1.2.7"<% if (express) { %>,
-    "restangular": "~1.2.2"<% } %><% } %>
-  },
+    <% if (angular) { %>"angular": "~1.2.14",
+    "angular-route": "~1.2.14"<% if (express) { %>,
+    "restangular": "~1.3.1"<% } %><% } %>
+  }<% if (angular) { %>,
   "devDependencies": {
-    <% if (angular) { %>"angular-mocks": "~1.2.7"<% } %>
-  },
-  "resolutions": {
-    "angular": "~1.2.7"
-  }
+    "angular-mocks": "~1.2.14"
+  }<% } %>
 }

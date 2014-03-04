@@ -3,14 +3,14 @@ angular.module('<%= modulename %>', [
   'ngRoute',
   <% if (useexample) { %>'<%= modulename %>.todo',
   <% if (express) { %>'restangular',
-  <% } %><% } %>'<%= modulename %>Templates'
+  <% } %><% } %>'<%= modulenameDashed %>-templates'
 ])<% if (useexample) { %>
 .config(function ($routeProvider<% if (express) { %>, RestangularProvider<% } %>) {
   'use strict';
   $routeProvider
     .when('/todo', {
       controller: 'TodoCtrl',
-      templateUrl: '/<%= modulename %>/todo/todo.html'
+      templateUrl: '/<%= modulenameDashed %>/todo/todo.html'
     })
     .otherwise({
       redirectTo: '/todo'
