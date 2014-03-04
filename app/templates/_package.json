@@ -4,7 +4,7 @@
   "private": true<% if (express) { %>,
   "main": "src/index.js"<% } %>,
   "scripts": {
-    "start": <% if (express) { %>"NODE_ENV=production node src/index.js"<% } else { %>"grunt serve:dist"<% } %>,
+    "start": "gulp watch",
     "test": "gulp test"
   },
   "keywords": [
