@@ -244,26 +244,6 @@ function templateFiles (opt) {
   return gulp.src(['./src/app/**/*.html', '!./src/app/index.html'], opt)
     .pipe(opt && opt.min ? g.htmlmin(htmlminOpts) : noop());
 }
-<% } %>
-/**
- * Concat, rename, minify
- *
- * @param {String} ext
- * @param {String} name
- * @param {Object} opt
- */
-function dist (ext, name, opt) {
-  opt = opt || {};
-  return lazypipe()
-    .pipe(g.concat, name + '.' + ext)
-    .pipe(gulp.dest, './dist')
-    .pipe(opt.ngmin ? g.ngmin : noop)
-    .pipe(opt.ngmin ? g.rename : noop, name + '.annotated.' + ext)
-    .pipe(opt.ngmin ? gulp.dest : noop, './dist')
-    .pipe(ext === 'js' ? g.uglify : g.minifyCss)
-    .pipe(g.rename, name + '.min.' + ext)
-    .pipe(gulp.dest, './dist')();
-}
 
 /**
  * Build AngularJS templates/partials
@@ -278,6 +258,26 @@ function buildTemplates () {
     .pipe(g.concat, klei.name + 'Templates.js')
     .pipe(gulp.dest, './.tmp')
     .pipe(livereload)();
+}
+<% } %>
+/**
+ * Concat, rename, minify
+ *
+ * @param {String} ext
+ * @param {String} name
+ * @param {Object} opt
+ */
+function dist (ext, name, opt) {
+  opt = opt || {};
+  return lazypipe()
+    .pipe(g.concat, name + '.' + ext)
+    .pipe(gulp.dest, './dist')<% if (angular) { %>
+    .pipe(opt.ngmin ? g.ngmin : noop)
+    .pipe(opt.ngmin ? g.rename : noop, name + '.annotated.' + ext)
+    .pipe(opt.ngmin ? gulp.dest : noop, './dist')<% } %>
+    .pipe(ext === 'js' ? g.uglify : g.minifyCss)
+    .pipe(g.rename, name + '.min.' + ext)
+    .pipe(gulp.dest, './dist')();
 }
 
 /**
