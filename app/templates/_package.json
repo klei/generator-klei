@@ -1,5 +1,5 @@
 {
-  "name": "km-<%= modulenameDashed %>",
+  "name": "<%= modulenameDashed %>",
   "version": "0.1.0",
   "private": true<% if (express) { %>,
   "main": "src/index.js"<% } %>,
