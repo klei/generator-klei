@@ -147,6 +147,8 @@ gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
  */
 gulp.task('watch', ['default'], function () {
   isWatching = true;
+  // Initiate livereload server:
+  g.livereload();
   gulp.watch(['./gulpfile.js'<% if (!choseType) { %>, './src/*.js'<% } %><% if (addconfig) { %>, './src/config/*.js'<% } %><% if (express) { %>, './src/api/{,*/}*.js'<% } %>], ['jshint<% if (angular) { %>-backend<% } %>']);<% if (angular) { %>
   gulp.watch('./src/app/**/*.js', ['jshint-app']).on('change', function (evt) {
     if (evt.type !== 'changed') {
