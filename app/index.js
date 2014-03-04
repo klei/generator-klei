@@ -63,22 +63,22 @@ KleiGenerator.prototype.ask = function ask() {
         {
           value: 'express',
           name: 'REST API ' + c.$comment('(using ' + c.$info('express.js') + ')'),
-          checked: true
+          checked: c.isFirstRun() || c.hasPart('express')
         },
         {
           value: 'mongo',
           name: 'MongoDB ' + c.$comment('(using ' + c.$info('Mongoose') + ')'),
-          checked: true
+          checked: c.isFirstRun() || c.hasPart('mongo')
         },
         {
           value: 'angular',
           name: 'Client APP ' + c.$comment('(using ' + c.$info('AngularJS') + ')'),
-          checked: true
+          checked: c.isFirstRun() || c.hasPart('angular')
         },
         {
           value: 'stylus',
           name: 'Stylesheets ' + c.$comment('(using ' + c.$info('Stylus') + ')'),
-          checked: true
+          checked: c.isFirstRun() || c.hasPart('stylus')
         }
       ]
     },
