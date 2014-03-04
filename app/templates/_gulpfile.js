@@ -141,7 +141,7 @@ gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
 /**
  * Watch
  */
-gulp.task('watch', ['default'], function () {
+gulp.task('watch', [<% if (express) { %>'nodemon', <% } %>'default'], function () {
   isWatching = true;
   // Initiate livereload server:
   g.livereload();
@@ -163,7 +163,7 @@ gulp.task('watch', ['default'], function () {
 /**
  * Default task
  */
-gulp.task('default', ['lint'<% if (express) { %>, 'nodemon'<% } %><% if (angular) { %>, 'build-all'<% } %>]);
+gulp.task('default', ['lint'<% if (angular) { %>, 'build-all'<% } %>]);
 
 /**
  * Lint everything
