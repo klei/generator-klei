@@ -59,8 +59,8 @@ gulp.task('clean-css', function () {
 gulp.task('styles', ['clean-css'], function () {
   return gulp.src([
     <% if (angular) { %>'./src/app/**/*.styl',
-    '!./src/app/**/_*.styl'<% } else { %>'./src/styles/**/*.styl',
-    '!./src/styles/**/_*.styl'<% } %>
+    '!./src/app/**/_*.styl'<% } else { %>'./src/**/*.styl',
+    '!./src/**/_*.styl'<% } %>
   ])
     .pipe(g.stylus({use: ['nib']}))
     .pipe(gulp.dest('./.tmp/css/'))
@@ -138,11 +138,17 @@ gulp.task('dist', ['vendors', 'styles-dist', 'scripts-dist'], function () {
     .pipe(gulp.dest('./dist/'));
 });
 <% } %>
+<% if (!express) { %>
+/**
+ * Static file server
+ */
+gulp.task('statics', g.serve({root: ['./.tmp', './src/app', './bower_components']}));
+<% } %>
 /**
  * Watch
  */
 gulp.task('serve', ['watch']);
-gulp.task('watch', [<% if (express) { %>'nodemon', <% } %>'default'], function () {
+gulp.task('watch', [<% if (express) { %>'nodemon'<% } else { %>'statics'<% } %>, 'default'], function () {
   isWatching = true;
   // Initiate livereload server:
   g.livereload();
@@ -154,7 +160,7 @@ gulp.task('watch', [<% if (express) { %>'nodemon', <% } %>'default'], function (
   });
   gulp.watch('./src/app/index.html', ['index']);
   gulp.watch(['./src/app/**/*.html', '!./src/app/index.html'], ['templates']);<% } %><% if (stylus) { %>
-  gulp.watch([<% if (angular) { %>'./src/app/**/*.styl'<% } else { %>'./src/styles/**/*.styl'<% } %>], ['csslint']<% if (angular) { %>).on('change', function (evt) {
+  gulp.watch([<% if (angular) { %>'./src/app/**/*.styl'<% } else { %>'./src/**/*.styl'<% } %>], ['csslint']<% if (angular) { %>).on('change', function (evt) {
     if (evt.type !== 'changed') {
       gulp.start('index');
     }
@@ -227,8 +233,8 @@ function appFiles (opt) {
         // for Google AngularJS naming recommendations. (e.g. todo.js must come before todo-controller.js)
         return b.path.localeCompare(a.path);
       } else {
-        // Otherwise, leave as is
-        return 0;
+        // Otherwise, sort by alphabetical order:
+        return a.path.localeCompare(b.path);
       }
     }));
 }
