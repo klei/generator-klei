@@ -4,7 +4,7 @@ var util = require('util'),
     yeoman = require('yeoman-generator'),
     c = require('../lib/common');
 
-var KleiGenerator = module.exports = function KleiGenerator(args, options, config) {
+var KleiGenerator = module.exports = function KleiGenerator(args, options) {
   yeoman.generators.Base.apply(this, arguments);
 
   this.argument('modulename', { type: String, required: false });
@@ -192,13 +192,15 @@ KleiGenerator.prototype.frontendFiles = function frontendFiles() {
     this.copy('csslintrc', 'src/.csslintrc');
     if (this.angular) {
       this.mkdir('src/app/styles');
-      this.copy('app/app.styl', 'src/app/app.styl');
-      this.copy('app/styles/_base.styl', 'src/app/styles/_base.styl');
-      this.copy('app/styles/_forms.styl', 'src/app/styles/_forms.styl');
+      this.copy('styles/main.styl', 'src/app/app.styl');
+      this.copy('styles/_base.styl', 'src/app/styles/_base.styl');
+      this.copy('styles/_forms.styl', 'src/app/styles/_forms.styl');
     } else {
       this.mkdir('src/styles');
       this.template('styles/_styleguide.html', 'src/styles/styleguide.html');
-      this.copy('styles/module.styl', 'src/styles/' + this.modulename + '.styl');
+      this.copy('styles/main.styl', 'src/main.styl');
+      this.copy('styles/_base.styl', 'src/styles/_base.styl');
+      this.copy('styles/_forms.styl', 'src/styles/_forms.styl');
     }
   }
   if (this.angular) {
